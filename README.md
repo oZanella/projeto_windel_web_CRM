@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # teste_windel_web
 =======
 # Solicitação:
@@ -26,4 +26,3 @@ Commits do GitHub de forma organizada (isso vai servir para facilitar melhor a a
 API: https://teste-tecnico-front-api.up.railway.app
 Documentação da API: https://teste-tecnico-front-api.up.railway.app/swagger
 
->>>>>>> 6a3272c (Definição de routes)

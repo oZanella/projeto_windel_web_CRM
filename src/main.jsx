@@ -1,31 +1,31 @@
 import { createBrowserRouter, RouterProvider, Route } from "react-router-dom"
 import { createRoot } from 'react-dom/client'
 import { StrictMode } from 'react'
-import App from './App.jsx'
+import { App } from './App.jsx'
 
 import './style/GlobalStyles.css'
 
 
 //páginas do projeto
-import Cadastro from './routes/Cadastro.jsx'
-import Home from './routes/Home.jsx'
-import Edit from './routes/Edit.jsx'
+import { Cadastro } from './routes/Cadastro.jsx'
+import { Home } from './routes/Home.jsx'
+import { Edit } from './routes/Edit.jsx'
 
 const router = createBrowserRouter([
   {
     element: <App />,
     children: [
       {
-        path: '/',
+        path: '/home',
         element: <Home />,
       },
       {
         path: '/cad',
-        element: <Cadastro/>,
+        element: <Cadastro />,
       },
       {
         path: '/edi',
-        element: <Edit/>,
+        element: <Edit />,
       },
     ],
   },

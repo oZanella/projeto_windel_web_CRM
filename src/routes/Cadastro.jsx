@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Cadastro = () => {
+export const Cadastro = () => {
   return (
     <div>
       Cadastro
@@ -8,4 +8,4 @@ const Cadastro = () => {
   )
 }
 
-export default Cadastro
+

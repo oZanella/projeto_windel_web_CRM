@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 
-const HomeBase = () => {
+export const HomeBase = () => {
   return (
     <nav className='HomeBase'>
       <h2>
@@ -21,4 +21,3 @@ const HomeBase = () => {
   )
 }
 
-export default HomeBase

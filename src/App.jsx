@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom'
-import HomeBase from './components/HomeBase'
+import { HomeBase } from './components/HomeBase'
 
 import './style/GlobalStyles.css'
 

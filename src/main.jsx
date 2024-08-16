@@ -5,7 +5,6 @@ import { App } from './App.jsx'
 
 import './style/GlobalStyles.css'
 
-
 //páginas do projeto
 import { Cadastro } from './routes/Cadastro.jsx'
 import { Home } from './routes/Home.jsx'
@@ -20,11 +19,11 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: '/cad',
+        path: '/cadastro',
         element: <Cadastro />,
       },
       {
-        path: '/edi',
+        path: '/editar',
         element: <Edit />,
       },
     ],

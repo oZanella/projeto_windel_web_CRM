@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Box, Button, IconButton } from '@mui/material';
+import { AppBar, Toolbar, Typography, Box, Button, IconButton, Grid } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Logo from '../image/LogoWindel.svg';
 
@@ -8,38 +8,54 @@ export const Header = () => {
     <AppBar
       position="fixed"
       sx={{
-        backgroundColor: 'var(--HeaderTop)', // cor do Header
+        backgroundColor: 'var(--LigthGray)',
+        boxShadow: '0px 0.01px 11px var(--secondary)',
+        width: '100%', // Garante que o AppBar ocupe toda a largura da tela
       }}
     >
       <Toolbar
         sx={{
           display: 'flex',
-          justifyContent: 'space-between',
+          flexDirection: { xs: 'column', sm: 'row' }, // Coluna em dispositivos móveis, linha em telas maiores
           alignItems: 'center',
+          justifyContent: 'space-between', // Espaço entre logo, título e botões
+          textAlign: { xs: 'center', sm: 'left' }, // Centraliza o texto em dispositivos móveis
         }}
       >
-        {/* Imagem à esquerda */}
+        {/* Logo da esquerda */}
         <IconButton
           edge="start"
           aria-label="logo"
-          sx={{ mr: 2 }}
-          component={Link} 
-          to={`/`}
+          sx={{ mr: 2, mb: { xs: 2, sm: 0 } }} // Margin-bottom para dispositivos móveis
+          component={Link}
+          to={`/home`}
         >
-          <img src={Logo} alt="Logo" style={{ width: '40px', height: '40px' }} to={`/`} />
+          <img src={Logo} alt="Logo" style={{ width: '40px', height: '40px' }} />
         </IconButton>
 
-        {/* Botões com espaçamento */}
-        <Typography sx={{ display: 'flex', flexGrow: 1, gap: 2 }}>
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button variant="contained" component={Link} to={`/home`}>Home</Button>
-            <Button variant="contained" component={Link} to={`/cad`}>Cadastro</Button>
-            <Button variant="contained" component={Link} to={`/edi`}>Editar</Button>
-          </Box>
+        {/* Título do centro */}
+        <Typography variant="h6" sx={{ flexGrow: 1, mb: { xs: 2, sm: 0 } }}>
+          Cooking Cake
         </Typography>
+
+        {/* Botões da direita */}
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 2,
+            flexDirection: { xs: 'row', sm: 'row' },
+            alignItems: { xs: 'center', sm: 'flex-end' },
+            '& .MuiButton-root': {
+              color: 'var(--primary)', // Define a cor do texto dos botões
+            },
+          }}
+        >
+          <Button variant="contained" component={Link} to={`/home`}>Home</Button>
+          <Button variant="contained" component={Link} to={`/cadastro`}>Cadastro</Button>
+          <Button variant="contained" component={Link} to={`/editar`}>Editar</Button>
+        </Box>
       </Toolbar>
     </AppBar>
   );
 };
-
 

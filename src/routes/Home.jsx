@@ -12,7 +12,7 @@ export const Home = () => {
 
     try {
 
-      const response = await axios.get("");
+      const response = await axios.get("https://teste-tecnico-front-api.up.railway.app/recipe");
 
       // https://jsonplaceholder.typicode.com/posts
       // https://teste-tecnico-front-api.up.railway.app/recipe

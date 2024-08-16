@@ -7,9 +7,11 @@ import './style/GlobalStyles.css'
 export function App() {
 
   return (
-    <Box>
+    <Box sx={{ p: { xs: 2, sm: 3 }, marginTop: { xs: 8, sm: 8} }}>
       <Header />
-      <Outlet />
+      <Box >
+        <Outlet />
+      </Box>
     </Box>
   );
 }

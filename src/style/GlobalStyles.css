@@ -1,10 +1,11 @@
 :root {
+  --click: #7fa8c4;
   --primary: #E8F1F2;
   --darkblue: #13293D;
-  --secondary: Black;
-  --animation: #006494;
+  --secondary: #000000;
   --ligthblue: #1b98e0;
-  --click: #7fa8c4;
+  --animation: #006494;
+  --ligthkgrey: #D3D3D3;
   --blueceledron: #247ba0;
 }
 

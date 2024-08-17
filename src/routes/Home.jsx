@@ -2,7 +2,7 @@
 import { Grid, Box, Typography } from '@mui/material'
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+
 
 export const Home = () => {
 
@@ -34,11 +34,11 @@ export const Home = () => {
 
   return (
     <Box>
-    <Grid item xs>
-      <Typography variant="h6" sx={{ textAlign: 'center' }}>
-        Teste de response - Home
-      </Typography>
-    </Grid>
-  </Box>
+      <Grid item xs>
+        <Typography variant="h6" sx={{ textAlign: 'center' }}>
+          Teste de response - Home
+        </Typography>
+      </Grid>
+    </Box>
   )
 }

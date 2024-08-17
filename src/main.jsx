@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider, Route } from "react-router-dom"
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom"
 import { createRoot } from 'react-dom/client'
 import { StrictMode } from 'react'
 import { App } from './App.jsx'
@@ -14,6 +14,10 @@ const router = createBrowserRouter([
   {
     element: <App />,
     children: [
+      {
+        path: '/',
+        element: <Navigate to="/home" replace />,
+      },
       {
         path: '/home',
         element: <Home />,

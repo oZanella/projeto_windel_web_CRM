@@ -1,11 +1,24 @@
 :root {
-    --FontHeader: rgb(69, 158, 209);
-    --HeaderTop: rgb(204, 204, 207);
-    --LightGray: LightGray;
-    --secondary: Black;
-    --primary: white;
+  --primary: #E8F1F2;
+  --darkblue: #13293D;
+  --secondary: Black;
+  --animation: #006494;
+  --ligthblue: #1b98e0;
+  --click: #7fa8c4;
+  --blueceledron: #247ba0;
 }
 
 * {
     color: var(--secondary);
 }
+
+body {
+    background-image: url('/image/fundoBase.svg'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  #root {
+    height: 100%;
+  }

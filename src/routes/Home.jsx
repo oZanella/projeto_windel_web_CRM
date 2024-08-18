@@ -1,12 +1,11 @@
-import { Grid, Box, Typography, Link, Collapse, List, ListItem, Card, IconButton, TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Grid, Box, Typography, Card, IconButton, TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
 import React, { useEffect, useState } from 'react';
 import { handleShowDetails, handleEdit, handleSave, handleInputChange } from '../components/Handle';
 import { blogFetch } from '../axios/config';
-
+import { IngredientsButton } from '../components/Button';
 
 export const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -106,6 +105,7 @@ export const Home = () => {
             >
               <MenuItem value={true}>Sim</MenuItem>
               <MenuItem value={false}>Não</MenuItem>
+
             </Select>
           </FormControl>
         </DialogContent>
@@ -131,15 +131,6 @@ export const Home = () => {
                     sx={{ color: 'var(--black)' }}
                   >
                     <DeleteIcon />
-                  </IconButton>
-
-                  {/* Botão para Adicionar Novo Registro */}
-                  <IconButton
-                    color="primary"
-                    onClick={handleAddOpen}
-                    sx={{ marginBottom: 2, color: 'var(--black)' }}
-                  >
-                    <AddIcon />
                   </IconButton>
                   {/* Botão de Editar */}
                   <Box>
@@ -230,49 +221,13 @@ export const Home = () => {
                   </Box>
                 )}
 
-                {/* Botão de ingredientes */}
-                {modeEdit !== post.id && (
-                  <Link
-                    component="button"
-                    onClick={() => handleShowDetails(post, modeEdit, setSelectInfo, selectInfo)}
-                    sx={{
-                      display: 'block',
-                      marginTop: 1,
-                      cursor: 'pointer',
-                      border: '1px solid rgba(0, 0, 0, 0.2)',
-                      borderRadius: 1.4,
-                      padding: 0.5,
-                      borderColor: 'var(--ligthkgrey)',
-                      color: 'var(--black)',
-                      transition: 'all 6s ease-in-out',
-                      ':hover': {
-                        backgroundColor: 'var(--click)',
-                        borderColor: 'var(--ligthkgrey)',
-                      },
-                      textDecoration: 'none',
-                    }}
-                  >
-                    {selectInfo?.id === post.id ? 'Fechar' : 'Ingredientes'}
-                  </Link>
-                )}
-
-                {/* Exibe os ingredientes */}
-                <Collapse in={selectInfo?.id === post.id}>
-                  <Box sx={{ padding: 0.5 }}>
-                    <List sx={{ listStyleType: 'disc', paddingLeft: 3 }}>
-                      {post.ingredients.map((ingredient) => (
-                        <ListItem
-                          key={ingredient.id}
-                          sx={{ display: 'list-item', paddingLeft: 0 }}
-                        >
-                          <Typography variant="body2">
-                            {ingredient.name}: {ingredient.quantity}
-                          </Typography>
-                        </ListItem>
-                      ))}
-                    </List>
-                  </Box>
-                </Collapse>
+                {/* Exibi os ingredientes */}
+                <IngredientsButton
+                  post={post}
+                  selectInfo={selectInfo}
+                  setSelectInfo={setSelectInfo}
+                  handleShowDetails={handleShowDetails}
+                />
 
               </Card>
             </Grid>

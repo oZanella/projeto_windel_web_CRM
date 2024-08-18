@@ -1,11 +1,15 @@
 
 import { blogFetch } from '../axios/config';
 
-export const handleShowDetails = (post, modeEdit, setSelectInfo, selectInfo) => {
-  if (modeEdit === post.id)
-    return;
-  setSelectInfo(selectInfo?.id === post.id ? null : post);
+
+export const handleShowDetails = (post, setSelectInfo, selectInfo) => {
+  if (selectInfo?.id === post.id) {
+    setSelectInfo(null); // Fecha se já estiver aberto
+  } else {
+    setSelectInfo(post); // Abre o post atual
+  }
 };
+
 
 export const handleEdit = (post, setModeEdit, setDataEdit) => {
   setModeEdit(post.id);

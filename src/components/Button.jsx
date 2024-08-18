@@ -1,52 +1,46 @@
 import React from 'react';
-import { Box, Collapse, IconButton, Link, List, ListItem, Typography } from '@mui/material';
+import { Box, Collapse, IconButton, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 export const IngredientsButton = ({ post, selectInfo, setSelectInfo, handleShowDetails }) => {
   return (
     <Box>
       {/* Botão de ingredientes */}
-      <Link
-        component="button"
+      <IconButton
         onClick={() => handleShowDetails(post, setSelectInfo, selectInfo)}
         sx={{
-          display: 'block',
-          marginTop: 1,
-          cursor: 'pointer',
-          border: '1px solid rgba(0, 0, 0, 0.2)',
-          borderRadius: 1,
-          padding: '8px 16px',
-          borderColor: 'rgba(0, 0, 0, 0.2)',
-          color: 'text.primary',
-          fontWeight: 500,
-          textAlign: 'center',
-          transition: 'background-color 0.3s ease, border-color 0.3s ease',
-          textDecoration: 'none',
+          padding: 0,
+          color: selectInfo?.id === post.id ? 'primary.main' : 'text.primary',
           '&:hover': {
-            backgroundColor: 'primary.main',
-            borderColor: 'primary.main',
-            color: 'background.paper',
+            backgroundColor: 'transparent',
           },
         }}
       >
-        {selectInfo?.id === post.id ? 'Fechar' : 'Ingredientes'}
-      </Link>
+        <Typography variant="body2">
+          {selectInfo?.id === post.id ? 'Fechar' : 'Ingredientes'}
+        </Typography>
+      </IconButton>
 
       {/* Exibe os ingredientes */}
       <Collapse in={selectInfo?.id === post.id}>
-        <Box sx={{ padding: 2, backgroundColor: 'background.paper', borderRadius: 1, boxShadow: 1 }}>
-          <List sx={{ listStyleType: 'disc', paddingLeft: 3 }}>
-            {post.ingredients.map((ingredient) => (
-              <ListItem
-                key={ingredient.id}
-                sx={{ paddingLeft: 0 }}
-              >
-                <Typography variant="body2">
-                  {ingredient.name}: {ingredient.quantity}
-                </Typography>
-              </ListItem>
-            ))}
-          </List>
+        <Box sx={{ padding: 1 }}>
+          {post.ingredients.map((ingredient, index) => (
+            <Box
+              key={index}
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                padding: '4px 0',
+              }}
+            >
+              <Typography variant="body2">
+                {ingredient.name}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {ingredient.quantity}
+              </Typography>
+            </Box>
+          ))}
         </Box>
       </Collapse>
     </Box>
@@ -58,7 +52,7 @@ export const DeleteButton = ({ post, handleDelete }) => {
     <IconButton
       color="error"
       onClick={() => handleDelete(post.id)}
-      sx={{ color: 'var(--black)' }}
+      sx={{ color: 'text.primary' }}
     >
       <DeleteIcon />
     </IconButton>

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {
   Grid, Card, Typography, Box, Button, IconButton, TextField, Dialog, DialogTitle, DialogContent,
-  DialogActions, FormControlLabel, Switch
+  DialogActions, FormControlLabel, Switch, Chip, IconButton as MUIIconButton
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import { IngredientsButton, DeleteButton } from './Button';
 import axios from 'axios'; // Ensure Axios is imported
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
 
 // Define the API base URL
 const API_BASE_URL = 'https://teste-tecnico-front-api.up.railway.app';
@@ -17,6 +19,7 @@ export const CardDados = ({
   const [openModal, setOpenModal] = useState(false);
   const [currentPost, setCurrentPost] = useState(null);
   const [dataEdit, setDataEdit] = useState({});
+  const [newIngredient, setNewIngredient] = useState('');
 
   useEffect(() => {
     if (currentPost) {
@@ -32,6 +35,7 @@ export const CardDados = ({
   const handleEditClose = () => {
     setOpenModal(false);
     setCurrentPost(null);
+    setNewIngredient(''); // Clear new ingredient input
   };
 
   const handleSaveModal = async () => {
@@ -49,6 +53,23 @@ export const CardDados = ({
         console.error('Error saving data:', error);
       }
     }
+  };
+
+  const handleAddIngredient = () => {
+    if (newIngredient.trim() !== '') {
+      setDataEdit((prevData) => ({
+        ...prevData,
+        ingredients: [...(prevData.ingredients || []), newIngredient.trim()],
+      }));
+      setNewIngredient('');
+    }
+  };
+
+  const handleRemoveIngredient = (ingredientToRemove) => {
+    setDataEdit((prevData) => ({
+      ...prevData,
+      ingredients: (prevData.ingredients || []).filter((ingredient) => ingredient !== ingredientToRemove),
+    }));
   };
 
   return (
@@ -99,10 +120,14 @@ export const CardDados = ({
 
                 <Box sx={{ flexGrow: 1 }}>
                   <Typography variant="body2" sx={{ mb: 1 }}>
+                    Descrição:
+                    <br />
                     {post.description}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Category: {post.category}
+                    Categoria:
+                    <br />
+                    {post.category}
                   </Typography>
                 </Box>
 
@@ -120,9 +145,8 @@ export const CardDados = ({
         )}
       </Grid>
 
-      {/* Edit Modal */}
+      {/* Modal de edit */}
       <Dialog open={openModal} onClose={handleEditClose}>
-
         <DialogContent>
           {currentPost && (
             <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -162,6 +186,33 @@ export const CardDados = ({
                 label="Favorite"
                 sx={{ marginTop: 1 }}
               />
+
+              {/* Seleção de ingredientes */}
+              <Box sx={{ marginTop: 2 }}>
+                <Typography variant="h6" sx={{ mb: 1 }}>Ingredients</Typography>
+                {dataEdit.ingredients && dataEdit.ingredients.map((ingredient, index) => (
+                  <Chip
+                    key={index}
+                    label={ingredient}
+                    onDelete={() => handleRemoveIngredient(ingredient)}
+                    sx={{ marginRight: 1, marginBottom: 1 }}
+                    deleteIcon={<CloseIcon />}
+                  />
+                ))}
+                <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                  <TextField
+                    value={newIngredient}
+                    onChange={(e) => setNewIngredient(e.target.value)}
+                    label="New Ingredient"
+                    variant="outlined"
+                    size="small"
+                    sx={{ flexGrow: 1, marginRight: 1 }}
+                  />
+                  <IconButton color="primary" onClick={handleAddIngredient}>
+                    <AddIcon />
+                  </IconButton>
+                </Box>
+              </Box>
             </Box>
           )}
         </DialogContent>
@@ -189,7 +240,7 @@ export const CardDados = ({
               },
             }}
           >
-            Cancel
+            Cancelar
           </Button>
           <Button
             variant="contained"
@@ -205,7 +256,7 @@ export const CardDados = ({
               borderRadius: 1,
               padding: '8px 16px',
               borderColor: 'rgba(0, 0, 0, 0.2)',
-              color: 'text.primary',
+              color: 'background.paper',
               fontWeight: 500,
               textAlign: 'center',
               transition: 'background-color 0.3s ease, border-color 0.3s ease',
@@ -215,19 +266,11 @@ export const CardDados = ({
                 borderColor: 'primary.dark',
                 color: 'background.paper',
               },
-              
-              '& .MuiButton-startIcon': {
-                marginRight: 1, 
-              },
-              '& .MuiButton-label': {
-                justifyContent: 'center', 
-              },
             }}
           >
-            Save
+            Salvar
           </Button>
         </DialogActions>
-
       </Dialog>
     </>
   );

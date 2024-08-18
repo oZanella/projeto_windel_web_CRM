@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Grid, Box, Typography, TextField, Button, Dialog, DialogTitle, DialogContent } from '@mui/material';
-import { blogFetch } from '../axios/config'; // Certifique-se de que o caminho está correto
+import { Grid, Box, Typography, TextField, Button, Dialog, DialogTitle, DialogContent, IconButton } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import { blogFetch } from '../axios/config'; // Certifique-se de que o caminho está correto
 
 export const Cadastro = () => {
   const [newPost, setNewPost] = useState({
@@ -9,7 +11,7 @@ export const Cadastro = () => {
     description: '',
     category: '',
     isFavorite: false,
-    ingredients: []
+    ingredients: [{ name: '', quantity: 0 }] // Adiciona a propriedade quantity
   });
   const [openAddDialog, setOpenAddDialog] = useState(false);
 
@@ -21,12 +23,27 @@ export const Cadastro = () => {
     setNewPost({ ...newPost, [name]: value });
   };
 
+  const handleIngredientChange = (index, field, value) => {
+    const newIngredients = [...newPost.ingredients];
+    newIngredients[index] = { ...newIngredients[index], [field]: value };
+    setNewPost({ ...newPost, ingredients: newIngredients });
+  };
+
+  const handleAddIngredient = () => {
+    setNewPost({ ...newPost, ingredients: [...newPost.ingredients, { name: '', quantity: 0 }] });
+  };
+
+  const handleRemoveIngredient = (index) => {
+    const newIngredients = newPost.ingredients.filter((_, i) => i !== index);
+    setNewPost({ ...newPost, ingredients: newIngredients });
+  };
+
   const handleAdd = async () => {
     try {
       const newPostFormatted = {
         name: newPost.name,
         description: newPost.description,
-        ingredients: [], // Adicione os ingredientes conforme necessário
+        ingredients: newPost.ingredients.filter(ingredient => ingredient.name.trim() !== '' && ingredient.quantity > 0), // Remove ingredientes vazios e com quantidade inválida
         category: newPost.category,
         isFavorite: newPost.isFavorite
       };
@@ -35,7 +52,7 @@ export const Cadastro = () => {
       console.log('Post adicionado com sucesso', response.data);
       handleAddClose();
     } catch (error) {
-      console.error('Erro ao adicionar o post', error);
+      console.error('Erro ao adicionar o post', error.response?.data || error.message);
     }
   };
 
@@ -83,11 +100,49 @@ export const Cadastro = () => {
           <TextField
             name="isFavorite"
             label="Favorito (true/false)"
-            value={newPost.isFavorite}
+            value={newPost.isFavorite ? 'true' : 'false'}
             onChange={(e) => setNewPost({ ...newPost, isFavorite: e.target.value === 'true' })}
             fullWidth
             sx={{ marginBottom: 2 }}
           />
+          <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>Ingredientes</Typography>
+          {newPost.ingredients.map((ingredient, index) => (
+            <Grid container spacing={1} alignItems="center" key={index}>
+              <Grid item xs={5}>
+                <TextField
+                  label={`Ingrediente ${index + 1}`}
+                  value={ingredient.name}
+                  onChange={(e) => handleIngredientChange(index, 'name', e.target.value)}
+                  fullWidth
+                  sx={{ marginBottom: 1 }}
+                />
+              </Grid>
+              <Grid item xs={5}>
+                <TextField
+                  label={`Quantidade ${index + 1}`}
+                  type="number"
+                  value={ingredient.quantity}
+                  onChange={(e) => handleIngredientChange(index, 'quantity', parseInt(e.target.value, 10) || 0)}
+                  fullWidth
+                  sx={{ marginBottom: 1 }}
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <IconButton onClick={() => handleRemoveIngredient(index)} color="error">
+                  <RemoveCircleIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          ))}
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={handleAddIngredient}
+            startIcon={<AddCircleIcon />}
+            sx={{ marginTop: 1, marginBottom: 2 }}
+          >
+            Adicionar Ingrediente
+          </Button>
           <Button
             variant="contained"
             color="primary"
@@ -102,5 +157,3 @@ export const Cadastro = () => {
     </Box>
   );
 };
-
-

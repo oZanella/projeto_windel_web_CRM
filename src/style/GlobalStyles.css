@@ -7,19 +7,10 @@
   --animation: #006494;
   --ligthkgrey: #D3D3D3;
   --blueceledron: #247ba0;
+  --delete: #FF0000;
 }
 
 * {
     color: var(--secondary);
 }
 
-body {
-    background-image: url('/image/fundoBase.svg'); 
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-  }
-
-  #root {
-    height: 100%;
-  }

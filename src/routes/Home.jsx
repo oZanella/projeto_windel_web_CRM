@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
 import { handleShowDetails, handleEdit, handleSave, handleInputChange } from '../components/Handle';
-import { CardDados } from '../components/ExibCard';
+import { CardDados } from '../components/TableHome';
 
 import { blogFetch } from '../axios/config';
 

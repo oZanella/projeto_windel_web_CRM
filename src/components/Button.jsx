@@ -52,7 +52,7 @@ export const DeleteButton = ({ post, handleDelete }) => {
     <IconButton
       color="error"
       onClick={() => handleDelete(post.id)}
-      sx={{ color: 'text.primary' }}
+      sx={{ color: '' }}
     >
       <DeleteIcon />
     </IconButton>

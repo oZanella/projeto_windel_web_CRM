@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, Button, IconButton, TextField, Dialog, DialogContent, DialogActions, FormControlLabel, Switch, Chip, Paper
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, Button, IconButton, TextField, Dialog, DialogContent, DialogActions, FormControlLabel, Switch, Chip, Paper, Checkbox
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SelectAllIcon from '@mui/icons-material/SelectAll';
 import axios from 'axios';
+import { DeleteButton } from './Button';
 
 const API_BASE_URL = 'https://teste-tecnico-front-api.up.railway.app';
 
@@ -18,6 +20,7 @@ export const CardDados = ({
   const [currentPost, setCurrentPost] = useState(null);
   const [dataEdit, setDataEdit] = useState({});
   const [newIngredient, setNewIngredient] = useState('');
+  const [selectedPosts, setSelectedPosts] = useState([]);
 
   useEffect(() => {
     if (currentPost) {
@@ -66,8 +69,57 @@ export const CardDados = ({
     }));
   };
 
+  const handleSelectAll = () => {
+    if (selectedPosts.length === posts.length) {
+      setSelectedPosts([]); // Deselect all
+    } else {
+      setSelectedPosts(posts.map(post => post.id)); // Select all
+    }
+  };
+
+  const handleDeleteSelected = async () => {
+    try {
+      await Promise.all(selectedPosts.map(id => axios.delete(`${API_BASE_URL}/posts/${id}`)));
+      const response = await axios.get(`${API_BASE_URL}/posts`);
+      setPosts(response.data);
+      setSelectedPosts([]);
+    } catch (error) {
+      console.error('Error ao apagar os registros:', error);
+    }
+  };
+
+  const handleSelectPost = (id) => {
+    setSelectedPosts(prevSelected =>
+      prevSelected.includes(id)
+        ? prevSelected.filter(postId => postId !== id)
+        : [...prevSelected, id]
+    );
+  };
+
   return (
     <>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+        <Button
+          variant="contained"
+          color="error"
+          startIcon={<DeleteIcon />}
+          onClick={handleDeleteSelected}
+          disabled={selectedPosts.length === 0}
+          sx={{ marginRight: 2 }}
+        >
+          Apagar Selecionados
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<SelectAllIcon />}
+          onClick={handleSelectAll}
+        >
+          {selectedPosts.length === posts.length ? 'Desmarcar Todos' : 'Selecionar Todos'}
+        </Button>
+      </Box>
+
+      {/* Tabela aonde aparece os dados */}
       <TableContainer component={Paper} sx={{ overflowX: 'auto' }}>
         <Table size='small'>
           <TableHead>
@@ -89,7 +141,9 @@ export const CardDados = ({
             ) : (
               posts.map((post) => (
                 <TableRow sx={{ height: 'auto' }} key={post.id}>
-                  <TableCell sx={{ padding: '8px' }}>{post.name}</TableCell>
+                  <TableCell sx={{ padding: '8px' }}>
+                    {post.name}
+                  </TableCell>
                   <TableCell sx={{ padding: '8px' }}>{post.description}</TableCell>
                   <TableCell sx={{ padding: '8px' }}>{post.category}</TableCell>
 
@@ -126,19 +180,26 @@ export const CardDados = ({
                   </TableCell>
 
                   <TableCell>
-                    <IconButton
-                      color="primary"
-                      onClick={() => handleEditOpen(post)}
-                      sx={{ mr: 1 }}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      color="error"
-                      onClick={() => handleDelete(post.id)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Checkbox
+                        checked={selectedPosts.includes(post.id)}
+                        onChange={() => handleSelectPost(post.id)}
+                        color="primary"
+                      />
+                      <IconButton
+                        color="primary"
+                        onClick={() => handleEditOpen(post)}
+                        sx={{ mr: 1 }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        color="error"
+                        onClick={() => handleDelete(post.id)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Box>
                   </TableCell>
                 </TableRow>
               ))
@@ -147,6 +208,7 @@ export const CardDados = ({
         </Table>
       </TableContainer>
 
+      {/* Modal de edição */}
       <Dialog open={openModal} onClose={handleEditClose} fullWidth maxWidth="sm">
         <DialogContent>
           {currentPost && (
@@ -198,71 +260,36 @@ export const CardDados = ({
                     deleteIcon={<CloseIcon />}
                   />
                 ))}
-                <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                   <TextField
                     value={newIngredient}
                     onChange={(e) => setNewIngredient(e.target.value)}
-                    label="Novo Ingrediente"
+                    label="Novo ingrediente"
                     variant="outlined"
                     size="small"
-                    sx={{ flexGrow: 1, marginRight: 1 }}
+                    sx={{ marginRight: 1 }}
                   />
-                  <IconButton color="primary" onClick={handleAddIngredient}>
-                    <AddIcon />
-                  </IconButton>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAddIngredient}
+                    startIcon={<AddIcon />}
+                  >
+                    Adicionar
+                  </Button>
                 </Box>
               </Box>
             </Box>
           )}
         </DialogContent>
-        <DialogActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button
-            onClick={handleEditClose}
-            color="secondary"
-            sx={{
-              display: 'block',
-              marginTop: 1,
-              cursor: 'pointer',
-              border: '1px solid rgba(0, 0, 0, 0.2)',
-              borderRadius: 1,
-              padding: '8px 16px',
-              borderColor: 'rgba(0, 0, 0, 0.2)',
-              color: 'text.primary',
-              fontWeight: 500,
-              textAlign: 'center',
-              transition: 'background-color 0.3s ease, border-color 0.3s ease',
-              textDecoration: 'none',
-              '&:hover': {
-                backgroundColor: 'primary.main',
-                borderColor: 'transparent',
-                color: '#fff',
-              },
-            }}
-          >
+        <DialogActions>
+          <Button onClick={handleEditClose} color="inherit">
             Cancelar
           </Button>
           <Button
             onClick={handleSaveModal}
             color="primary"
-            sx={{
-              display: 'block',
-              marginTop: 1,
-              cursor: 'pointer',
-              border: '1px solid rgba(0, 0, 0, 0.2)',
-              borderRadius: 1,
-              padding: '8px 16px',
-              borderColor: 'rgba(0, 0, 0, 0.2)',
-              color: 'text.primary',
-              fontWeight: 500,
-              textAlign: 'center',
-              transition: 'background-color 0.3s ease, border-color 0.3s ease',
-              textDecoration: 'none',
-              '&:hover': {
-                backgroundColor: 'primary.main',
-                borderColor: 'transparent',
-                color: '#fff',
-              },
-            }}
+            variant="contained"
             startIcon={<SaveIcon />}
           >
             Salvar

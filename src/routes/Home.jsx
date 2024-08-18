@@ -52,12 +52,12 @@ export const Home = () => {
         description: newPost.description,
         ingredients: [],
         category: newPost.category,
-        isFavorite: newPost.isFavorite                                           // Utilize o valor selecionado
+        isFavorite: newPost.isFavorite                                           
       };
 
       const response = await blogFetch.post("/recipe", newPostFormatted);
       setPosts([...posts, response.data]);
-      setNewPost({ name: '', description: '', category: '', isFavorite: false }); // Adicione o campo isFavorite
+      setNewPost({ name: '', description: '', category: '', isFavorite: false });
       handleAddClose();
       console.log('Post adicionado com sucesso');
     } catch (error) {

@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Grid, Card, Typography, Box, Button, IconButton, TextField, Dialog, DialogTitle, DialogContent,
-  DialogActions, FormControlLabel, Switch, Chip, IconButton as MUIIconButton
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, Typography, Box, Button, IconButton, TextField, Dialog, DialogTitle, DialogContent,
+  DialogActions, FormControlLabel, Switch, Chip, Paper
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
-import { IngredientsButton, DeleteButton } from './Button';
-import axios from 'axios'; // Ensure Axios is imported
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
+import axios from 'axios';
 
-// Define the API base URL
 const API_BASE_URL = 'https://teste-tecnico-front-api.up.railway.app';
 
 export const CardDados = ({
@@ -23,7 +22,7 @@ export const CardDados = ({
 
   useEffect(() => {
     if (currentPost) {
-      setDataEdit({ ...currentPost }); // Update dataEdit when currentPost changes
+      setDataEdit({ ...currentPost });
     }
   }, [currentPost]);
 
@@ -35,22 +34,18 @@ export const CardDados = ({
   const handleEditClose = () => {
     setOpenModal(false);
     setCurrentPost(null);
-    setNewIngredient(''); // Clear new ingredient input
+    setNewIngredient('');
   };
 
   const handleSaveModal = async () => {
     if (currentPost) {
       try {
-        // Update the post data via the API
         await axios.put(`${API_BASE_URL}/posts/${currentPost.id}`, dataEdit);
-
-        // Refresh the posts list
         const response = await axios.get(`${API_BASE_URL}/posts`);
         setPosts(response.data);
-
-        handleEditClose(); // Close the modal after saving
+        handleEditClose();
       } catch (error) {
-        console.error('Error saving data:', error);
+        console.error('Error ao salvar:', error);
       }
     }
   };
@@ -74,78 +69,68 @@ export const CardDados = ({
 
   return (
     <>
-      <Grid container spacing={2}>
-        {posts.length === 0 ? (
-          <Typography variant="body1" sx={{ width: '100%', textAlign: 'center' }}>Loading...</Typography>
-        ) : (
-          posts.map((post) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={post.id}>
-              <Card sx={{
-                padding: 2,
-                borderRadius: 2,
-                boxShadow: 3,
-                position: 'relative',
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%',
-                overflow: 'hidden',
-                transition: 'transform 0.3s ease-in-out',
-                '&:hover': {
-                  transform: 'scale(1.02)',
-                },
-                backgroundColor: 'background.paper',
-              }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 500 }}>
-                    {post.name}
-                  </Typography>
-                  <Box>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>Category</TableCell>
+              <TableCell>Ingredients</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {posts.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} align="center">
+                  <Typography variant="body1">Loading...</Typography>
+                </TableCell>
+              </TableRow>
+            ) : (
+              posts.map((post) => (
+                <TableRow key={post.id}>
+                  <TableCell>{post.name}</TableCell>
+                  <TableCell>{post.description}</TableCell>
+                  <TableCell>{post.category}</TableCell>
+                  <TableCell>
+                    <Box sx={{ maxHeight: 100, overflowY: 'auto', background: 'var(--lightgrey)', padding: 1 }}>
+                      <ul style={{ padding: 0, margin: 0, listStyleType: 'none' }}>
+                        {post.ingredients && post.ingredients.length > 0 ? (
+                          post.ingredients.map((ingredient) => (
+                            <li key={ingredient.id} style={{ marginBottom: '8px' }}>
+                              {ingredient.name} - Quantidade: {ingredient.quantity}
+                            </li>
+                          ))
+                        ) : (
+                          <Typography variant="body2" color="text.secondary">Nenhum ingrediente disponível</Typography>
+                        )}
+                      </ul>
+                    </Box>
+                  </TableCell>
+                  <TableCell>
                     <IconButton
                       color="primary"
                       onClick={() => handleEditOpen(post)}
-                      sx={{
-                        mr: 1,
-                        visibility: modeEdit !== post.id ? 'visible' : 'hidden',
-                      }}
+                      sx={{ mr: 1 }}
                     >
                       <EditIcon />
                     </IconButton>
-                    <DeleteButton
-                      post={post}
-                      handleDelete={handleDelete}
-                      sx={{ visibility: modeEdit !== post.id ? 'visible' : 'hidden' }}
-                    />
-                  </Box>
-                </Box>
+                    <IconButton
+                      color="error"
+                      onClick={() => handleDelete(post.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-                <Box sx={{ flexGrow: 1 }}>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    Descrição:
-                    <br />
-                    {post.description}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Categoria:
-                    <br />
-                    {post.category}
-                  </Typography>
-                </Box>
-
-                <Box sx={{ padding: 2, display: 'flex', justifyContent: 'center', mt: 'auto' }}>
-                  <IngredientsButton
-                    post={post}
-                    selectInfo={selectInfo}
-                    setSelectInfo={setSelectInfo}
-                    handleShowDetails={handleShowDetails}
-                  />
-                </Box>
-              </Card>
-            </Grid>
-          ))
-        )}
-      </Grid>
-
-      {/* Modal de edit */}
+      {/* Modal de edição */}
       <Dialog open={openModal} onClose={handleEditClose}>
         <DialogContent>
           {currentPost && (
@@ -186,8 +171,6 @@ export const CardDados = ({
                 label="Favorite"
                 sx={{ marginTop: 1 }}
               />
-
-              {/* Seleção de ingredientes */}
               <Box sx={{ marginTop: 2 }}>
                 <Typography variant="h6" sx={{ mb: 1 }}>Ingredients</Typography>
                 {dataEdit.ingredients && dataEdit.ingredients.map((ingredient, index) => (
@@ -256,16 +239,7 @@ export const CardDados = ({
               borderRadius: 1,
               padding: '8px 16px',
               borderColor: 'rgba(0, 0, 0, 0.2)',
-              color: 'background.paper',
-              fontWeight: 500,
               textAlign: 'center',
-              transition: 'background-color 0.3s ease, border-color 0.3s ease',
-              textDecoration: 'none',
-              '&:hover': {
-                backgroundColor: 'primary.dark',
-                borderColor: 'primary.dark',
-                color: 'background.paper',
-              },
             }}
           >
             Salvar

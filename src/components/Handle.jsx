@@ -10,7 +10,6 @@ export const handleShowDetails = (post, setSelectInfo, selectInfo) => {
   }
 };
 
-
 export const handleEdit = (post, setModeEdit, setDataEdit) => {
   setModeEdit(post.id);
   setDataEdit(post);
@@ -31,3 +30,4 @@ export const handleSave = async (postId, updateData) => {
 export const handleInputChange = (e, setDataEdit) => {
   setDataEdit(prevDataEdit => ({ ...prevDataEdit, [e.target.name]: e.target.value }));
 };
+

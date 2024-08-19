@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, Button, IconButton, TextField, Dialog, DialogContent, DialogActions, FormControlLabel, Switch, Chip, Paper, Checkbox
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, Button, IconButton, TextField, Dialog, DialogContent, DialogActions, FormControlLabel, Switch, Chip, Paper, Checkbox, Icon
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
@@ -53,15 +53,9 @@ export const CardDados = ({
 
   const handleAddIngredient = () => {
     if (newIngredient.trim() !== '') {
-      const newIngredientObject = {
-        id: Date.now(),  // Geração de um ID temporário
-        name: newIngredient.trim(),
-        quantity: 1 // Ajuste a quantidade conforme necessário
-      };
-
       setDataEdit((prevData) => ({
         ...prevData,
-        ingredients: [...(prevData.ingredients || []), newIngredientObject],
+        ingredients: [...(prevData.ingredients || []), newIngredient.trim()],
       }));
       setNewIngredient('');
     }
@@ -70,15 +64,15 @@ export const CardDados = ({
   const handleRemoveIngredient = (ingredientToRemove) => {
     setDataEdit((prevData) => ({
       ...prevData,
-      ingredients: (prevData.ingredients || []).filter((ingredient) => ingredient.id !== ingredientToRemove.id),
+      ingredients: (prevData.ingredients || []).filter((ingredient) => ingredient !== ingredientToRemove),
     }));
   };
 
   const handleSelectAll = () => {
     if (selectedPosts.length === posts.length) {
-      setSelectedPosts([]); // Desmarcar todos
+      setSelectedPosts([]); // Deselect all
     } else {
-      setSelectedPosts(posts.map(post => post.id)); // Selecionar todos
+      setSelectedPosts(posts.map(post => post.id)); 
     }
   };
 
@@ -99,10 +93,6 @@ export const CardDados = ({
         ? prevSelected.filter(postId => postId !== id)
         : [...prevSelected, id]
     );
-  };
-
-  const handleFavoriteClick = (id) => {
-    // Função de favorito
   };
 
   return (
@@ -128,7 +118,7 @@ export const CardDados = ({
         </Button>
       </Box>
 
-      {/* Tabela onde aparecem os dados */}
+      {/* Tabela aonde aparece os dados */}
       <TableContainer component={Paper} sx={{ overflowX: 'auto' }}>
         <Table size='small'>
           <TableHead>
@@ -136,7 +126,7 @@ export const CardDados = ({
               <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Nome</TableCell>
               <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Descrição</TableCell>
               <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Categoria</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Ingredientes</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Ingrediente</TableCell>
               <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Ação</TableCell>
             </TableRow>
           </TableHead>
@@ -207,18 +197,6 @@ export const CardDados = ({
                         onClick={() => handleDelete(post.id)}
                       >
                         <DeleteIcon />
-                      </IconButton>
-                      {post.isFavorite && (
-                        <Chip
-                          label="Favorito"
-                          color="success"
-                          sx={{
-                            cursor: 'default',
-                            ml: 2,
-                          }}
-                        />
-                      )}
-                    </Box>
                   </TableCell>
                 </TableRow>
               ))
@@ -261,61 +239,55 @@ export const CardDados = ({
                   <Switch
                     checked={dataEdit.isFavorite || false}
                     onChange={(e) => setDataEdit({ ...dataEdit, isFavorite: e.target.checked })}
+                    name="isFavorite"
                     color="primary"
                   />
                 }
                 label="Favorito"
-                sx={{ marginBottom: 2 }}
+                sx={{ marginTop: 1 }}
               />
-
-              {/* Ingredientes */}
-              <Box>
-                <Typography variant="subtitle1">Ingredientes</Typography>
-                {dataEdit.ingredients && dataEdit.ingredients.length > 0 ? (
-                  dataEdit.ingredients.map((ingredient) => (
-                    <Box key={ingredient.id} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Typography>{ingredient.name} ({ingredient.quantity})</Typography>
-                      <IconButton
-                        color="error"
-                        onClick={() => handleRemoveIngredient(ingredient)}
-                      >
-                        <CloseIcon />
-                      </IconButton>
-                    </Box>
-                  ))
-                ) : (
-                  <Typography variant="body2">Nenhum ingrediente adicionado.</Typography>
-                )}
-              </Box>
-
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <TextField
-                  label="Novo Ingrediente"
-                  value={newIngredient}
-                  onChange={(e) => setNewIngredient(e.target.value)}
-                  fullWidth
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleAddIngredient}
-                  startIcon={<AddIcon />}
-                >
-                  Adicionar
-                </Button>
+              <Box sx={{ marginTop: 2 }}>
+                <Typography variant="h6" sx={{ mb: 1 }}>Ingredientes</Typography>
+                {dataEdit.ingredients && dataEdit.ingredients.map((ingredient, index) => (
+                  <Chip
+                    key={index}
+                    label={`${ingredient.name} (${ingredient.quantity})`}
+                    onDelete={() => handleRemoveIngredient(ingredient)}
+                    sx={{ marginRight: 1, marginBottom: 1 }}
+                    deleteIcon={<CloseIcon />}
+                  />
+                ))}
+                <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                  <TextField
+                    value={newIngredient}
+                    onChange={(e) => setNewIngredient(e.target.value)}
+                    label="Novo ingrediente"
+                    variant="outlined"
+                    size="small"
+                    sx={{ marginRight: 1 }}
+                  />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAddIngredient}
+                    startIcon={<AddIcon />}
+                  >
+                    Adicionar
+                  </Button>
+                </Box>
               </Box>
             </Box>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleEditClose} color="secondary">
+          <Button onClick={handleEditClose} color="inherit">
             Cancelar
           </Button>
           <Button
-            variant="contained"
-            color="primary"
-            startIcon={<SaveIcon />}
             onClick={handleSaveModal}
+            color="primary"
+            variant="contained"
+            startIcon={<SaveIcon />}
           >
             Salvar
           </Button>

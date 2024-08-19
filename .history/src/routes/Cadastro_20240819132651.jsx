@@ -11,7 +11,7 @@ export const Cadastro = () => {
     description: '',
     category: '',
     isFavorite: false,
-    ingredients: [{ name: '', quantity: 0 }] 
+    ingredients: [{ name: '', quantity: 0 }] // Adiciona a propriedade quantity
   });
   const [openAddDialog, setOpenAddDialog] = useState(false);
 

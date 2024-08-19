@@ -3,7 +3,7 @@ import { Grid, Box, Typography, TextField, Button, Dialog, DialogTitle, DialogCo
 import SaveIcon from '@mui/icons-material/Save';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import { blogFetch } from '../axios/config'; 
+import { blogFetch } from '../axios/config'; // Certifique-se de que o caminho está correto
 
 export const Cadastro = () => {
   const [newPost, setNewPost] = useState({
@@ -11,7 +11,7 @@ export const Cadastro = () => {
     description: '',
     category: '',
     isFavorite: false,
-    ingredients: [{ name: '', quantity: 0 }] 
+    ingredients: [{ name: '', quantity: 0 }] // Adiciona a propriedade quantity
   });
   const [openAddDialog, setOpenAddDialog] = useState(false);
 
@@ -60,13 +60,16 @@ export const Cadastro = () => {
     <Box>
       <Grid container spacing={2} alignItems="center" justifyContent="center">
         <Grid item xs={12} sm={6} md={4}>
+          <Typography variant="h6" sx={{ textAlign: 'center', marginBottom: 2 }}>
+            Cadastro de Novo Produto
+          </Typography>
           <Button variant="contained" color="primary" onClick={handleAddOpen}>
             Adicionar Novo Produto
           </Button>
         </Grid>
       </Grid>
 
-      {/* Adicionar Novo Produto */}
+      {/* Dialog para Adicionar Novo Produto */}
       <Dialog open={openAddDialog} onClose={handleAddClose}>
         <DialogTitle>Adicionar Novo Produto</DialogTitle>
         <DialogContent>

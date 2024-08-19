@@ -53,15 +53,9 @@ export const CardDados = ({
 
   const handleAddIngredient = () => {
     if (newIngredient.trim() !== '') {
-      const newIngredientObject = {
-        id: Date.now(),  // Geração de um ID temporário
-        name: newIngredient.trim(),
-        quantity: 1 // Ajuste a quantidade conforme necessário
-      };
-
       setDataEdit((prevData) => ({
         ...prevData,
-        ingredients: [...(prevData.ingredients || []), newIngredientObject],
+        ingredients: [...(prevData.ingredients || []), newIngredient.trim()],
       }));
       setNewIngredient('');
     }
@@ -70,7 +64,7 @@ export const CardDados = ({
   const handleRemoveIngredient = (ingredientToRemove) => {
     setDataEdit((prevData) => ({
       ...prevData,
-      ingredients: (prevData.ingredients || []).filter((ingredient) => ingredient.id !== ingredientToRemove.id),
+      ingredients: (prevData.ingredients || []).filter((ingredient) => ingredient !== ingredientToRemove),
     }));
   };
 
@@ -102,7 +96,7 @@ export const CardDados = ({
   };
 
   const handleFavoriteClick = (id) => {
-    // Função de favorito
+    
   };
 
   return (
@@ -212,10 +206,10 @@ export const CardDados = ({
                         <Chip
                           label="Favorito"
                           color="success"
-                          sx={{
-                            cursor: 'default',
-                            ml: 2,
+                          sx={{ 
+                            cursor: 'default'
                           }}
+                          onClick={() => handleFavoriteClick(post.id)}
                         />
                       )}
                     </Box>
@@ -267,14 +261,23 @@ export const CardDados = ({
                 label="Favorito"
                 sx={{ marginBottom: 2 }}
               />
-
-              {/* Ingredientes */}
-              <Box>
-                <Typography variant="subtitle1">Ingredientes</Typography>
+              <Typography variant="h6">Ingredientes:</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, marginBottom: 2 }}>
+                <TextField
+                  label="Novo Ingrediente"
+                  value={newIngredient}
+                  onChange={(e) => setNewIngredient(e.target.value)}
+                  fullWidth
+                />
+                <IconButton color="primary" onClick={handleAddIngredient}>
+                  <AddIcon />
+                </IconButton>
+              </Box>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                 {dataEdit.ingredients && dataEdit.ingredients.length > 0 ? (
                   dataEdit.ingredients.map((ingredient) => (
-                    <Box key={ingredient.id} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Typography>{ingredient.name} ({ingredient.quantity})</Typography>
+                    <Box key={ingredient} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography>{ingredient}</Typography>
                       <IconButton
                         color="error"
                         onClick={() => handleRemoveIngredient(ingredient)}
@@ -287,36 +290,14 @@ export const CardDados = ({
                   <Typography variant="body2">Nenhum ingrediente adicionado.</Typography>
                 )}
               </Box>
-
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <TextField
-                  label="Novo Ingrediente"
-                  value={newIngredient}
-                  onChange={(e) => setNewIngredient(e.target.value)}
-                  fullWidth
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleAddIngredient}
-                  startIcon={<AddIcon />}
-                >
-                  Adicionar
-                </Button>
-              </Box>
             </Box>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleEditClose} color="secondary">
+          <Button onClick={handleEditClose} color="primary">
             Cancelar
           </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<SaveIcon />}
-            onClick={handleSaveModal}
-          >
+          <Button onClick={handleSaveModal} color="primary" startIcon={<SaveIcon />}>
             Salvar
           </Button>
         </DialogActions>

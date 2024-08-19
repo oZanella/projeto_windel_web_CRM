@@ -43,7 +43,7 @@ export const Cadastro = () => {
       const newPostFormatted = {
         name: newPost.name,
         description: newPost.description,
-        ingredients: newPost.ingredients.filter(ingredient => ingredient.name.trim() !== '' && ingredient.quantity > 0), // Remove ingredientes vazios e com quantidade inválida
+        ingredients: newPost.ingredients.filter(ingredient => ingredient.name.trim() !== '' && ingredient.quantity > 0), 
         category: newPost.category,
         isFavorite: newPost.isFavorite
       };
@@ -97,7 +97,7 @@ export const Cadastro = () => {
           <TextField
             name="isFavorite"
             label="Favorito (true/false)"
-            value={newPost.isFavorite ? 'true' : 'false'}
+            value={newpostisFavorite ? 'true' : 'false'}
             onChange={(e) => setNewPost({ ...newPost, isFavorite: e.target.value === 'true' })}
             fullWidth
             sx={{ marginBottom: 2 }}

@@ -1,0 +1,20 @@
+:root {
+  --click: #7fa8c4;
+  --primary: #E8F1F2;
+  --darkblue: #13293D;
+  --secondary: #000000;
+  --ligthblue: #1b98e0;
+  --animation: #006494;
+  --ligthkgrey: #D3D3D3;
+  --blueceledron: #0373a3;
+  --delete: #FF0000;
+  --Teste: green,
+}
+
+* {
+    color: var(--secondary);
+}
+
+body {
+  background-color: var(--secondary);
+}

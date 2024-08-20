@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Typography, Box, Button, IconButton } from '@mui/material';
+import { AppBar, Toolbar, Box, Button } from '@mui/material';
 import Logo from '../image/LogoWindel.svg';
 import { Link } from 'react-router-dom';
 import React from 'react';

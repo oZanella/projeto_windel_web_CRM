@@ -1,13 +1,12 @@
 import { Box, Typography, TextField, Button, IconButton, Snackbar, Alert, FormControlLabel, Switch } from '@mui/material';
-
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
-
 import { blogFetch } from '../axios/config';
 import { useState } from 'react';
+import { red } from '@mui/material/colors';
 
-//Dados da API para ser preenchido
+// Dados da API para ser preenchido
 export const Cadastro = () => {
   const [newPost, setNewPost] = useState({
     name: '',
@@ -17,7 +16,7 @@ export const Cadastro = () => {
     ingredients: [{ name: '', quantity: 0 }]
   });
 
-  //Dados para apresentar aviso de sucesso ou erro
+  // Dados para apresentar aviso de sucesso ou erro
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
@@ -69,6 +68,7 @@ export const Cadastro = () => {
       setSnackbarOpen(true);
 
     } catch (error) {
+
       // Mostrar mensagem de erro
       setSnackbarMessage('Não foi possível realizar o cadastro. Verifique os dados inseridos.');
       setSnackbarSeverity('error');
@@ -78,9 +78,11 @@ export const Cadastro = () => {
 
   return (
 
-    //Adicionar os dados do produto
+    // Adicionar os dados do produto
     <Box sx={{ p: 3, maxWidth: 800, mx: 'auto', bgcolor: 'background.paper', boxShadow: 3, borderRadius: 2 }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>Adicionar Novo Produto</Typography>
+
+      <Typography variant="h6" sx={{ mb: 2, display: 'flex', justifyContent: 'center', }}>Adicionar nova receita</Typography>
+
       <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <TextField
           name="name"
@@ -139,10 +141,9 @@ export const Cadastro = () => {
               />
 
               {/* Remove o ingrediente inserido */}
-              <IconButton sx={{mb:1}} onClick={() => handleRemoveIngredient(index)}>
-                <DeleteIcon  />
+              <IconButton sx={{ mb: 1 }} onClick={() => handleRemoveIngredient(index)}>
+                <DeleteIcon />
               </IconButton>
-              
             </Box>
           ))
         ) : (
@@ -151,7 +152,7 @@ export const Cadastro = () => {
           <Typography variant="body2">Sem ingredientes</Typography>
         )}
 
-        {/* Botao para adicionar Ingrediente */}
+        {/* Botão para adicionar Ingrediente e Salvar */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, marginTop: 1 }}>
           <Button
             variant="contained"
@@ -159,32 +160,34 @@ export const Cadastro = () => {
             onClick={handleAddIngredient}
             startIcon={<AddCircleIcon />}
           >
-            Adicionar Ingrediente
+            Adicionar
+          </Button>
+
+          <Box sx={{ flexGrow: 1 }} />
+
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<SaveIcon />}
+            onClick={handleAdd}
+          >
+            Salvar
           </Button>
         </Box>
-      </Box>
 
-      {/* Botao para Salvar */}
-      <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<SaveIcon />}
-          onClick={handleAdd}
+        {/* //configuração do aviso */}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={2500}
+          transitionDuration={350}
+          onClose={() => setSnackbarOpen(false)}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
-          Salvar
-        </Button>
+          <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%' }}>
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
       </Box>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%' }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };

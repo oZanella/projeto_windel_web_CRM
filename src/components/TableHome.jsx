@@ -10,6 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
 import axios from 'axios';
 
+
 const API_BASE_URL = 'https://teste-tecnico-front-api.up.railway.app';
 
 export const CardDados = ({
@@ -101,13 +102,11 @@ export const CardDados = ({
     );
   };
 
-  const handleFavoriteClick = (id) => {
-    // Função de favorito
-  };
-
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+
+        {/* //Apagar selecionados */}
         <Button
           variant="contained"
           color="error"
@@ -118,6 +117,8 @@ export const CardDados = ({
         >
           Apagar Selecionados
         </Button>
+
+        {/* //Marcar e desmarcar */}
         <Button
           variant="contained"
           color="primary"

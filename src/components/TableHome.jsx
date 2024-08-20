@@ -8,6 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import axios from 'axios';
 
 
@@ -209,16 +210,25 @@ export const CardDados = ({
                       >
                         <DeleteIcon />
                       </IconButton>
+
                       {post.isFavorite && (
                         <Chip
-                          label="Favorito"
-                          color="success"
+                          icon={
+                            <StarOutlineIcon />
+                          }
                           sx={{
                             cursor: 'default',
                             ml: 2,
+                            backgroundColor: 'transparent', // Deixa o fundo transparente
+                            color: 'var(--favorito)', // Define a cor do texto e do ícone
+                            '& .MuiChip-icon': {
+                              color: 'var(--favorito)', // Aplica a cor no ícone do Chip
+                            },
                           }}
                         />
-                      )}
+
+                      )
+                      }
                     </Box>
                   </TableCell>
                 </TableRow>

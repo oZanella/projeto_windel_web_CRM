@@ -155,6 +155,19 @@ export const Cadastro = () => {
         {/* Botão para adicionar Ingrediente e Salvar */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, marginTop: 1 }}>
           <Button
+            sx={{
+              background: 'var(--darkblue2)',
+              fontWeight: 'bold',
+              textTransform: 'uppercase',
+              transition: 'background-color 0.3s, transform 0.3s',
+              // Animação
+              '&:hover': {
+                transform: 'scale(1.07)',
+              },
+              '&:active': {
+                backgroundColor: 'var(--click)',
+              },
+            }}
             variant="contained"
             color="primary"
             onClick={handleAddIngredient}
@@ -166,6 +179,19 @@ export const Cadastro = () => {
           <Box sx={{ flexGrow: 1 }} />
 
           <Button
+            sx={{
+              background: 'var(--darkblue2)',
+              fontWeight: 'bold',
+              textTransform: 'uppercase',
+              transition: 'background-color 0.3s, transform 0.3s',
+              // Animação
+              '&:hover': {
+                transform: 'scale(1.07)',
+              },
+              '&:active': {
+                backgroundColor: 'var(--click)',
+              },
+            }}
             variant="contained"
             color="primary"
             startIcon={<SaveIcon />}

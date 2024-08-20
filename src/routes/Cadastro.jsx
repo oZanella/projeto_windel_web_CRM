@@ -124,6 +124,7 @@ export const Cadastro = () => {
         {newPost.ingredients.length > 0 ? (
           newPost.ingredients.map((ingredient, index) => (
             <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+
               <TextField
                 label="Ingrediente"
                 value={ingredient.name}
@@ -131,13 +132,15 @@ export const Cadastro = () => {
                 fullWidth
                 sx={{ marginBottom: 1 }}
               />
+
               <TextField
                 label="Quantidade"
                 type="number"
-                value={ingredient.quantity}
                 onChange={(e) => handleIngredientChange(index, 'quantity', parseInt(e.target.value, 10) || 0)}
-                fullWidth
+                InputProps={{ inputProps: { min: 0 } }}
+                value={ingredient.quantity}
                 sx={{ marginBottom: 1 }}
+                fullWidth
               />
 
               {/* Remove o ingrediente inserido */}

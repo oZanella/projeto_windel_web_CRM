@@ -11,7 +11,6 @@ import SelectAllIcon from '@mui/icons-material/SelectAll';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import axios from 'axios';
 
-
 const API_BASE_URL = 'https://teste-tecnico-front-api.up.railway.app';
 
 export const CardDados = ({
@@ -56,9 +55,9 @@ export const CardDados = ({
   const handleAddIngredient = () => {
     if (newIngredient.trim() !== '') {
       const newIngredientObject = {
-        id: Date.now(),  // Geração de um ID temporário
+        id: Date.now(),
         name: newIngredient.trim(),
-        quantity: 1 // Ajuste a quantidade conforme necessário
+        quantity: 1
       };
 
       setDataEdit((prevData) => ({
@@ -78,9 +77,9 @@ export const CardDados = ({
 
   const handleSelectAll = () => {
     if (selectedPosts.length === posts.length) {
-      setSelectedPosts([]); // Desmarcar todos
+      setSelectedPosts([]);
     } else {
-      setSelectedPosts(posts.map(post => post.id)); // Selecionar todos
+      setSelectedPosts(posts.map(post => post.id));
     }
   };
 
@@ -134,6 +133,8 @@ export const CardDados = ({
       <TableContainer component={Paper} sx={{ overflowX: 'auto' }}>
         <Table size='small'>
           <TableHead>
+
+            {/* Nome de cada dado exibido */}
             <TableRow>
               <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Nome</TableCell>
               <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Descrição</TableCell>
@@ -141,24 +142,29 @@ export const CardDados = ({
               <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Ingredientes</TableCell>
               <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Ação</TableCell>
             </TableRow>
+
           </TableHead>
+
           <TableBody>
+            
             {posts.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} align="center">
                   <Typography variant="body1" sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Carregando informações...</Typography>
                 </TableCell>
               </TableRow>
+
             ) : (
+
               posts.map((post) => (
                 <TableRow sx={{ height: 'auto' }} key={post.id}>
-                  <TableCell sx={{ padding: '8px' }}>
+                  <TableCell sx={{ padding: '1rem' }}>
                     {post.name}
                   </TableCell>
-                  <TableCell sx={{ padding: '8px' }}>{post.description}</TableCell>
-                  <TableCell sx={{ padding: '8px' }}>{post.category}</TableCell>
+                  <TableCell sx={{ padding: '1rem' }}>{post.description}</TableCell>
+                  <TableCell sx={{ padding: '1rem' }}>{post.category}</TableCell>
 
-                  <TableCell sx={{ padding: '8px' }}>
+                  <TableCell sx={{ padding: '1rem' }}>
                     <Box sx={{
                       display: 'flex',
                       flexWrap: 'wrap',
@@ -219,14 +225,13 @@ export const CardDados = ({
                           sx={{
                             cursor: 'default',
                             ml: 2,
-                            backgroundColor: 'transparent', // Deixa o fundo transparente
-                            color: 'var(--favorito)', // Define a cor do texto e do ícone
+                            backgroundColor: 'transparent',
+                            color: 'var(--favorito)',
                             '& .MuiChip-icon': {
-                              color: 'var(--favorito)', // Aplica a cor no ícone do Chip
+                              color: 'var(--favorito)',
                             },
                           }}
                         />
-
                       )
                       }
                     </Box>

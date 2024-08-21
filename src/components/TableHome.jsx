@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, Button, IconButton, TextField, Dialog, DialogContent, DialogActions, FormControlLabel, Switch, Chip, Paper, Checkbox
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, Button, IconButton, Dialog, DialogContent, DialogActions, TextField, Chip, Paper, Checkbox, Pagination, useMediaQuery
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
@@ -10,19 +10,19 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import axios from 'axios';
-
+import { useTheme } from '@mui/material/styles';
 
 const API_BASE_URL = 'https://teste-tecnico-front-api.up.railway.app';
 
-export const CardDados = ({
-  posts, setPosts, handleDelete
-}) => {
+export const CardDados = ({ posts, setPosts, handleDelete }) => {
   const [openModal, setOpenModal] = useState(false);
   const [currentPost, setCurrentPost] = useState(null);
   const [dataEdit, setDataEdit] = useState({});
   const [newIngredient, setNewIngredient] = useState('');
   const [selectedPosts, setSelectedPosts] = useState([]);
-  // const PaginaTable = ({ data })
+
+  const [page, setPage] = useState(1);
+  const itensPage = 6;
 
   useEffect(() => {
     if (currentPost) {
@@ -57,9 +57,9 @@ export const CardDados = ({
   const handleAddIngredient = () => {
     if (newIngredient.trim() !== '') {
       const newIngredientObject = {
-        id: Date.now(),  // Geração de um ID temporário
+        id: Date.now(),
         name: newIngredient.trim(),
-        quantity: 1 // Ajuste a quantidade conforme necessário
+        quantity: 1
       };
 
       setDataEdit((prevData) => ({
@@ -104,11 +104,17 @@ export const CardDados = ({
     );
   };
 
+  const handleChangePage = (event, value) => {
+    setPage(value);
+  };
+
+  const startIndex = (page - 1) * itensPage;
+  const endIndex = startIndex + itensPage;
+  const paginatedPosts = posts.slice(startIndex, endIndex);
+
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-
-        {/* //Apagar selecionados */}
         <Button
           variant="contained"
           color="error"
@@ -120,7 +126,6 @@ export const CardDados = ({
           Apagar Selecionados
         </Button>
 
-        {/* //Marcar e desmarcar */}
         <Button
           variant="contained"
           color="primary"
@@ -131,7 +136,6 @@ export const CardDados = ({
         </Button>
       </Box>
 
-      {/* Tabela onde aparecem os dados */}
       <TableContainer component={Paper} sx={{ overflowX: 'auto' }}>
         <Table size='small'>
           <TableHead>
@@ -144,22 +148,22 @@ export const CardDados = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {posts.length === 0 ? (
+            {paginatedPosts.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} align="center">
                   <Typography variant="body1" sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Carregando informações...</Typography>
                 </TableCell>
               </TableRow>
             ) : (
-              posts.map((post) => (
+              paginatedPosts.map((post) => (
                 <TableRow sx={{ height: 'auto' }} key={post.id}>
-                  <TableCell sx={{ padding: '1rem' }}>
+                  <TableCell sx={{ padding: '8px' }}>
                     {post.name}
                   </TableCell>
-                  <TableCell sx={{ padding: '1rem' }}>{post.description}</TableCell>
-                  <TableCell sx={{ padding: '1rem' }}>{post.category}</TableCell>
+                  <TableCell sx={{ padding: '8px' }}>{post.description}</TableCell>
+                  <TableCell sx={{ padding: '8px' }}>{post.category}</TableCell>
 
-                  <TableCell sx={{ padding: '1rem' }}>
+                  <TableCell sx={{ padding: '8px' }}>
                     <Box sx={{
                       display: 'flex',
                       flexWrap: 'wrap',
@@ -215,7 +219,7 @@ export const CardDados = ({
                       {post.isFavorite && (
                         <Chip
                           icon={
-                            <StarOutlineIcon />
+                            <StarOutlineIcon sx={{ color: '#FFD700 !important' }} />
                           }
                           sx={{
                             cursor: 'default',
@@ -223,9 +227,7 @@ export const CardDados = ({
                             backgroundColor: 'transparent',
                           }}
                         />
-
-                      )
-                      }
+                      )}
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -235,13 +237,18 @@ export const CardDados = ({
         </Table>
       </TableContainer>
 
-      {/* Modal de edição */}
+      <Pagination
+        count={Math.ceil(posts.length / itensPage)}
+        page={page}
+        onChange={handleChangePage}
+        sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}
+      />
+
       <Dialog open={openModal} onClose={handleEditClose} fullWidth maxWidth="sm">
         <DialogContent>
           {currentPost && (
-            <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Box>
               <TextField
-                name="name"
                 label="Nome"
                 value={dataEdit.name || ''}
                 onChange={(e) => setDataEdit({ ...dataEdit, name: e.target.value })}
@@ -249,7 +256,6 @@ export const CardDados = ({
                 sx={{ marginBottom: 2 }}
               />
               <TextField
-                name="description"
                 label="Descrição"
                 value={dataEdit.description || ''}
                 onChange={(e) => setDataEdit({ ...dataEdit, description: e.target.value })}
@@ -257,123 +263,55 @@ export const CardDados = ({
                 sx={{ marginBottom: 2 }}
               />
               <TextField
-                name="category"
                 label="Categoria"
                 value={dataEdit.category || ''}
                 onChange={(e) => setDataEdit({ ...dataEdit, category: e.target.value })}
                 fullWidth
                 sx={{ marginBottom: 2 }}
               />
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={dataEdit.isFavorite || false}
-                    onChange={(e) => setDataEdit({ ...dataEdit, isFavorite: e.target.checked })}
-                    color="primary"
-                  />
-                }
-                label="Favorito"
-                sx={{ marginBottom: 2 }}
-              />
-
-              {/* Ingredientes */}
               <Box>
-                <Typography variant="subtitle1">Ingredientes</Typography>
-                {dataEdit.ingredients && dataEdit.ingredients.length > 0 ? (
-                  dataEdit.ingredients.map((ingredient) => (
-                    <Box key={ingredient.id} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Typography>{ingredient.name} ({ingredient.quantity})</Typography>
-                      <IconButton
-                        color="error"
-                        onClick={() => handleRemoveIngredient(ingredient)}
-                      >
-                        <CloseIcon />
-                      </IconButton>
-                    </Box>
-                  ))
-                ) : (
-                  <Typography variant="body2">Nenhum ingrediente adicionado.</Typography>
-                )}
-              </Box>
-
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <TextField
-                  label="Novo Ingrediente"
-                  value={newIngredient}
-                  onChange={(e) => setNewIngredient(e.target.value)}
-                  fullWidth
-                />
-
-                  {/* Botão de adicionar */}
-                <Button
-                  sx={{
-                    background: 'var(--darkblue2)',
-                    fontWeight: 'bold',
-                    textTransform: 'uppercase',
-                    transition: 'background-color 0.3s, transform 0.3s',
-                    // Animação
-                    '&:hover': {
-                      transform: 'scale(1.07)',
-                    },
-                    '&:active': {
-                      backgroundColor: 'var(--click)',
-                    },
-                  }}
-                  variant="contained"
-                  color="primary"
-                  onClick={handleAddIngredient}
-                  startIcon={<AddIcon sx={{ ml: 1}}/>}
-                >
-                  Adicionar
-                </Button>
-
+                <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
+                  Ingredientes
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', marginBottom: 2 }}>
+                  {dataEdit.ingredients && dataEdit.ingredients.length > 0 ? (
+                    dataEdit.ingredients.map((ingredient) => (
+                      <Chip
+                        key={ingredient.id}
+                        label={`${ingredient.name} (${ingredient.quantity})`}
+                        onDelete={() => handleRemoveIngredient(ingredient)}
+                        sx={{ marginBottom: 1 }}
+                      />
+                    ))
+                  ) : (
+                    <Typography variant="body2">Nenhum ingrediente adicionado</Typography>
+                  )}
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <TextField
+                    label="Adicionar ingrediente"
+                    value={newIngredient}
+                    onChange={(e) => setNewIngredient(e.target.value)}
+                    sx={{ flexGrow: 1, marginRight: 1 }}
+                  />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAddIngredient}
+                  >
+                    Adicionar
+                  </Button>
+                </Box>
               </Box>
             </Box>
           )}
         </DialogContent>
-        <DialogActions>
 
-          <Button
-            sx={{
-              background: 'var(--darkblue2)',
-              fontWeight: 'bold',
-              textTransform: 'uppercase',
-              transition: 'background-color 0.3s, transform 0.3s',
-              // Animação
-              '&:hover': {
-                transform: 'scale(1.07)',
-              },
-              '&:active': {
-                backgroundColor: 'var(--click)',
-              },
-            }}
-            variant="contained"
-            color="primary"
-            onClick={handleEditClose}
-          >
+        <DialogActions>
+          <Button onClick={handleEditClose} startIcon={<CloseIcon />} color="secondary">
             Cancelar
           </Button>
-
-
-          <Button
-            sx={{
-              background: 'var(--darkblue2)',
-              fontWeight: 'bold',
-              textTransform: 'uppercase',
-              transition: 'background-color 0.3s, transform 0.3s',
-              // Animação
-              '&:hover': {
-                transform: 'scale(1.07)',
-              },
-              '&:active': {
-                backgroundColor: 'var(--click)',
-              },
-            }}
-            variant="contained"
-            color="primary"
-            startIcon={<SaveIcon />}
-            onClick={handleSaveModal}
-          >
+          <Button onClick={handleSaveModal} startIcon={<SaveIcon />} color="primary">
             Salvar
           </Button>
         </DialogActions>

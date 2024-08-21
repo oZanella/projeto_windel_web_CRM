@@ -11,6 +11,7 @@ import SelectAllIcon from '@mui/icons-material/SelectAll';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import axios from 'axios';
 
+
 const API_BASE_URL = 'https://teste-tecnico-front-api.up.railway.app';
 
 export const CardDados = ({
@@ -21,6 +22,7 @@ export const CardDados = ({
   const [dataEdit, setDataEdit] = useState({});
   const [newIngredient, setNewIngredient] = useState('');
   const [selectedPosts, setSelectedPosts] = useState([]);
+  // const PaginaTable = ({ data })
 
   useEffect(() => {
     if (currentPost) {
@@ -55,9 +57,9 @@ export const CardDados = ({
   const handleAddIngredient = () => {
     if (newIngredient.trim() !== '') {
       const newIngredientObject = {
-        id: Date.now(),
+        id: Date.now(),  // Geração de um ID temporário
         name: newIngredient.trim(),
-        quantity: 1
+        quantity: 1 // Ajuste a quantidade conforme necessário
       };
 
       setDataEdit((prevData) => ({
@@ -77,9 +79,9 @@ export const CardDados = ({
 
   const handleSelectAll = () => {
     if (selectedPosts.length === posts.length) {
-      setSelectedPosts([]);
+      setSelectedPosts([]); // Desmarcar todos
     } else {
-      setSelectedPosts(posts.map(post => post.id));
+      setSelectedPosts(posts.map(post => post.id)); // Selecionar todos
     }
   };
 
@@ -133,8 +135,6 @@ export const CardDados = ({
       <TableContainer component={Paper} sx={{ overflowX: 'auto' }}>
         <Table size='small'>
           <TableHead>
-
-            {/* Nome de cada dado exibido */}
             <TableRow>
               <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Nome</TableCell>
               <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Descrição</TableCell>
@@ -142,20 +142,15 @@ export const CardDados = ({
               <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Ingredientes</TableCell>
               <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Ação</TableCell>
             </TableRow>
-
           </TableHead>
-
           <TableBody>
-            
             {posts.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} align="center">
                   <Typography variant="body1" sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Carregando informações...</Typography>
                 </TableCell>
               </TableRow>
-
             ) : (
-
               posts.map((post) => (
                 <TableRow sx={{ height: 'auto' }} key={post.id}>
                   <TableCell sx={{ padding: '1rem' }}>
@@ -226,12 +221,9 @@ export const CardDados = ({
                             cursor: 'default',
                             ml: 2,
                             backgroundColor: 'transparent',
-                            color: 'var(--favorito)',
-                            '& .MuiChip-icon': {
-                              color: 'var(--favorito)',
-                            },
                           }}
                         />
+
                       )
                       }
                     </Box>
@@ -311,23 +303,72 @@ export const CardDados = ({
                   onChange={(e) => setNewIngredient(e.target.value)}
                   fullWidth
                 />
+
+                  {/* Botão de adicionar */}
                 <Button
+                  sx={{
+                    background: 'var(--darkblue2)',
+                    fontWeight: 'bold',
+                    textTransform: 'uppercase',
+                    transition: 'background-color 0.3s, transform 0.3s',
+                    // Animação
+                    '&:hover': {
+                      transform: 'scale(1.07)',
+                    },
+                    '&:active': {
+                      backgroundColor: 'var(--click)',
+                    },
+                  }}
                   variant="contained"
                   color="primary"
                   onClick={handleAddIngredient}
-                  startIcon={<AddIcon />}
+                  startIcon={<AddIcon sx={{ ml: 1}}/>}
                 >
                   Adicionar
                 </Button>
+
               </Box>
             </Box>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleEditClose} color="secondary">
+
+          <Button
+            sx={{
+              background: 'var(--darkblue2)',
+              fontWeight: 'bold',
+              textTransform: 'uppercase',
+              transition: 'background-color 0.3s, transform 0.3s',
+              // Animação
+              '&:hover': {
+                transform: 'scale(1.07)',
+              },
+              '&:active': {
+                backgroundColor: 'var(--click)',
+              },
+            }}
+            variant="contained"
+            color="primary"
+            onClick={handleEditClose}
+          >
             Cancelar
           </Button>
+
+
           <Button
+            sx={{
+              background: 'var(--darkblue2)',
+              fontWeight: 'bold',
+              textTransform: 'uppercase',
+              transition: 'background-color 0.3s, transform 0.3s',
+              // Animação
+              '&:hover': {
+                transform: 'scale(1.07)',
+              },
+              '&:active': {
+                backgroundColor: 'var(--click)',
+              },
+            }}
             variant="contained"
             color="primary"
             startIcon={<SaveIcon />}

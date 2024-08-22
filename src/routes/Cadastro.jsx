@@ -4,7 +4,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import { blogFetch } from '../axios/config';
 import { useState } from 'react';
-import { red } from '@mui/material/colors';
 
 // Dados da API para ser preenchido
 export const Cadastro = () => {
@@ -63,7 +62,7 @@ export const Cadastro = () => {
       });
 
       // Mostrar mensagem de sucesso
-      setSnackbarMessage('Dados cadastrados com sucesso');
+      setSnackbarMessage('Registro realizado com sucesso');
       setSnackbarSeverity('success');
       setSnackbarOpen(true);
 

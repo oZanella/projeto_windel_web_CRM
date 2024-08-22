@@ -1,5 +1,5 @@
 import { AppBar, Toolbar, Box, Button } from '@mui/material';
-import Logo from '../image/LogoWindel.svg';
+// import Logo from '../image/LogoWindel.svg';
 import { Link } from 'react-router-dom';
 import React from 'react';
 
@@ -29,7 +29,7 @@ export const Header = () => {
           backgroundColor: 'var(--darkblue)',
           boxSizing: 'border-box',
         }}
-      >
+      > 
 
         {/* Botões */}
         <Box

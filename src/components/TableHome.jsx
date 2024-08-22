@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, Button, IconButton, Dialog, DialogContent, DialogActions, TextField, Chip, Paper, Checkbox, Pagination, useMediaQuery
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, Button, IconButton, Dialog, DialogContent, DialogActions, TextField, Chip, Paper, Checkbox, Pagination
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import axios from 'axios';
-import { useTheme } from '@mui/material/styles';
+
 
 const API_BASE_URL = 'https://teste-tecnico-front-api.up.railway.app';
 
@@ -79,9 +78,9 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
 
   const handleSelectAll = () => {
     if (selectedPosts.length === posts.length) {
-      setSelectedPosts([]); // Desmarcar todos
+      setSelectedPosts([]);
     } else {
-      setSelectedPosts(posts.map(post => post.id)); // Selecionar todos
+      setSelectedPosts(posts.map(post => post.id));
     }
   };
 
@@ -294,28 +293,92 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
                     onChange={(e) => setNewIngredient(e.target.value)}
                     sx={{ flexGrow: 1, marginRight: 1 }}
                   />
+
                   <Button
-                    variant="contained"
-                    color="primary"
+                    startIcon={<AddIcon sx={{ ml: 1.6 }} />}
                     onClick={handleAddIngredient}
-                  >
-                    Adicionar
+                    sx={{
+                      padding: '0', 
+                      minWidth: '0.1rem', 
+                      minHeight: '0.1rem',
+                      backgroundColor: 'transparent', 
+                      '&:hover': {
+                        backgroundColor: 'transparent',
+                      },
+                      '&:active': {
+                        backgroundColor: 'transparent',
+                        transform: 'none',
+                      },
+                    }}
+                      >
+
                   </Button>
-                </Box>
               </Box>
             </Box>
+            </Box>
           )}
-        </DialogContent>
+      </DialogContent>
 
-        <DialogActions>
-          <Button onClick={handleEditClose} startIcon={<CloseIcon />} color="secondary">
-            Cancelar
-          </Button>
-          <Button onClick={handleSaveModal} startIcon={<SaveIcon />} color="primary">
-            Salvar
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <DialogActions>
+
+        <Button
+          onClick={handleEditClose}
+          startIcon={<DeleteIcon />}
+          variant="contained"
+          sx={{
+            mr: { xs: 0, sm: 0 },
+            ml: { xs: 1, sm: 1 },
+            gap: 2,
+            flexGrow: { xs: 1, sm: 1 },
+            backgroundColor: 'var(--darkblue2)',
+            color: 'var(--primary)',
+            borderRadius: '0.4rem',
+            padding: '0.5rem',
+            fontWeight: 'bold',
+            transition: 'background-color 0.3s, transform 0.3s',
+
+            // Animação
+            '&:hover': {
+              transform: 'scale(1.02)',
+            },
+            '&:active': {
+              backgroundColor: 'var(--click)',
+            },
+          }}
+        >
+          Cancelar
+        </Button>
+
+        <Button
+          onClick={handleSaveModal}
+          startIcon={<SaveIcon />}
+          variant="contained"
+          sx={{
+            mr: { xs: 0, sm: 0 },
+            ml: { xs: 1, sm: 1 },
+            gap: 2,
+            flexGrow: { xs: 1, sm: 1 },
+            backgroundColor: 'var(--darkblue2)',
+            color: 'var(--primary)',
+            borderRadius: '0.4rem',
+            padding: '0.5rem',
+            fontWeight: 'bold',
+            transition: 'background-color 0.3s, transform 0.3s',
+
+            // Animação
+            '&:hover': {
+              transform: 'scale(1.02)',
+            },
+            '&:active': {
+              backgroundColor: 'var(--click)',
+            },
+          }}
+        >
+          Salvar
+        </Button>
+
+      </DialogActions>
+    </Dialog >
     </>
   );
 };

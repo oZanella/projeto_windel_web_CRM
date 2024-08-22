@@ -10,7 +10,6 @@ import SelectAllIcon from '@mui/icons-material/SelectAll';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import axios from 'axios';
 
-
 const API_BASE_URL = 'https://teste-tecnico-front-api.up.railway.app';
 
 export const CardDados = ({ posts, setPosts, handleDelete }) => {
@@ -19,6 +18,8 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
   const [dataEdit, setDataEdit] = useState({});
   const [newIngredient, setNewIngredient] = useState('');
   const [selectedPosts, setSelectedPosts] = useState([]);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [postToDelete, setPostToDelete] = useState(null);
 
   const [page, setPage] = useState(1);
   const itensPage = 6;
@@ -110,6 +111,30 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
   const startIndex = (page - 1) * itensPage;
   const endIndex = startIndex + itensPage;
   const paginatedPosts = posts.slice(startIndex, endIndex);
+
+  const handleDeleteClick = (post) => {
+    setPostToDelete(post);
+    setConfirmDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (postToDelete) {
+      try {
+        await axios.delete(`${API_BASE_URL}/posts/${postToDelete.id}`);
+        const response = await axios.get(`${API_BASE_URL}/posts`);
+        setPosts(response.data);
+        setPostToDelete(null);
+        setConfirmDialogOpen(false);
+      } catch (error) {
+        console.error('Error ao apagar o registro:', error);
+      }
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setPostToDelete(null);
+    setConfirmDialogOpen(false);
+  };
 
   return (
     <>
@@ -210,7 +235,7 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
                       </IconButton>
                       <IconButton
                         color="error"
-                        onClick={() => handleDelete(post.id)}
+                        onClick={() => handleDeleteClick(post)}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -236,149 +261,73 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
         </Table>
       </TableContainer>
 
-      <Pagination
-        count={Math.ceil(posts.length / itensPage)}
-        page={page}
-        onChange={handleChangePage}
-        sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}
-      />
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+        <Pagination
+          count={Math.ceil(posts.length / itensPage)}
+          page={page}
+          onChange={handleChangePage}
+          color="primary"
+        />
+      </Box>
 
-      <Dialog open={openModal} onClose={handleEditClose} fullWidth maxWidth="sm">
+      {/* Modal de confirmação */}
+      <Dialog open={confirmDialogOpen} onClose={handleCancelDelete}>
         <DialogContent>
-          {currentPost && (
-            <Box>
-              <TextField
-                label="Nome"
-                value={dataEdit.name || ''}
-                onChange={(e) => setDataEdit({ ...dataEdit, name: e.target.value })}
-                fullWidth
-                sx={{ marginBottom: 2 }}
-              />
-              <TextField
-                label="Descrição"
-                value={dataEdit.description || ''}
-                onChange={(e) => setDataEdit({ ...dataEdit, description: e.target.value })}
-                fullWidth
-                sx={{ marginBottom: 2 }}
-              />
-              <TextField
-                label="Categoria"
-                value={dataEdit.category || ''}
-                onChange={(e) => setDataEdit({ ...dataEdit, category: e.target.value })}
-                fullWidth
-                sx={{ marginBottom: 2 }}
-              />
-              <Box>
-                <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
-                  Ingredientes
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', marginBottom: 2 }}>
-                  {dataEdit.ingredients && dataEdit.ingredients.length > 0 ? (
-                    dataEdit.ingredients.map((ingredient) => (
-                      <Chip
-                        key={ingredient.id}
-                        label={`${ingredient.name} (${ingredient.quantity})`}
-                        onDelete={() => handleRemoveIngredient(ingredient)}
-                        sx={{ marginBottom: 1 }}
-                      />
-                    ))
-                  ) : (
-                    <Typography variant="body2">Nenhum ingrediente adicionado</Typography>
-                  )}
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <TextField
-                    label="Adicionar ingrediente"
-                    value={newIngredient}
-                    onChange={(e) => setNewIngredient(e.target.value)}
-                    sx={{ flexGrow: 1, marginRight: 1 }}
-                  />
 
-                  <Button
-                    startIcon={<AddIcon sx={{ ml: 1.6 }} />}
-                    onClick={handleAddIngredient}
-                    sx={{
-                      padding: '0', 
-                      minWidth: '0.1rem', 
-                      minHeight: '0.1rem',
-                      backgroundColor: 'transparent', 
-                      '&:hover': {
-                        backgroundColor: 'transparent',
-                      },
-                      '&:active': {
-                        backgroundColor: 'transparent',
-                        transform: 'none',
-                      },
-                    }}
-                      >
+          <Typography variant="h6" sx={{ display: 'flex', justifyContent: 'center' }}>Confirmação</Typography>
 
-                  </Button>
-              </Box>
-            </Box>
-            </Box>
-          )}
-      </DialogContent>
+          <Typography variant="body1">
+            Tem certeza de que deseja excluir o item "{postToDelete?.name}"?
+          </Typography>
 
-      <DialogActions>
+        </DialogContent>
+        <DialogActions>
 
-        <Button
-          onClick={handleEditClose}
-          startIcon={<DeleteIcon />}
-          variant="contained"
-          sx={{
-            mr: { xs: 0, sm: 0 },
-            ml: { xs: 1, sm: 1 },
-            gap: 2,
-            flexGrow: { xs: 1, sm: 1 },
-            backgroundColor: 'var(--darkblue2)',
-            color: 'var(--primary)',
-            borderRadius: '0.4rem',
-            padding: '0.5rem',
-            fontWeight: 'bold',
-            transition: 'background-color 0.3s, transform 0.3s',
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleCancelDelete}
+            sx={{
+              background: 'var(--darkblue2)',
+              fontWeight: 'bold',
+              flexGrow: { xs: 1, sm: 1 },
+              textTransform: 'uppercase',
+              transition: 'background-color 0.3s, transform 0.3s',
+              // Animação
+              '&:hover': {
+                transform: 'scale(1.03)',
+              },
+              '&:active': {
+                backgroundColor: 'var(--click)',
+              },
+            }}
+          >
+            Voltar
+          </Button>
 
-            // Animação
-            '&:hover': {
-              transform: 'scale(1.02)',
-            },
-            '&:active': {
-              backgroundColor: 'var(--click)',
-            },
-          }}
-        >
-          Cancelar
-        </Button>
-
-        <Button
-          onClick={handleSaveModal}
-          startIcon={<SaveIcon />}
-          variant="contained"
-          sx={{
-            mr: { xs: 0, sm: 0 },
-            ml: { xs: 1, sm: 1 },
-            gap: 2,
-            flexGrow: { xs: 1, sm: 1 },
-            backgroundColor: 'var(--darkblue2)',
-            color: 'var(--primary)',
-            borderRadius: '0.4rem',
-            padding: '0.5rem',
-            fontWeight: 'bold',
-            transition: 'background-color 0.3s, transform 0.3s',
-
-            // Animação
-            '&:hover': {
-              transform: 'scale(1.02)',
-            },
-            '&:active': {
-              backgroundColor: 'var(--click)',
-            },
-          }}
-        >
-          Salvar
-        </Button>
-
-      </DialogActions>
-    </Dialog >
+          <Button
+            onClick={handleConfirmDelete}
+            color="error"
+            variant="contained"
+            sx={{
+              background: 'var(--delete)',
+              fontWeight: 'bold',
+              flexGrow: { xs: 1, sm: 1 },
+              textTransform: 'uppercase',
+              transition: 'background-color 0.3s, transform 0.3s',
+              // Animação
+              '&:hover': {
+                transform: 'scale(1.03)',
+              },
+              '&:active': {
+                backgroundColor: 'var(--click)',
+              },
+            }}
+          >
+            Excluir
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

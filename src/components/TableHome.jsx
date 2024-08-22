@@ -235,7 +235,7 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
                       </IconButton>
                       <IconButton
                         color="error"
-                        onClick={() => handleDeleteClick(post)}
+                        onClick={() => handleDelete(post.id)}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -270,64 +270,142 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
         />
       </Box>
 
-      {/* Modal de confirmação */}
-      <Dialog open={confirmDialogOpen} onClose={handleCancelDelete}>
+      <Dialog open={openModal} onClose={handleEditClose} fullWidth maxWidth="sm">
         <DialogContent>
+          {currentPost && (
+            <Box>
+              <TextField
+                label="Nome"
+                value={dataEdit.name || ''}
+                onChange={(e) => setDataEdit({ ...dataEdit, name: e.target.value })}
+                fullWidth
+                sx={{ marginBottom: 2 }}
+              />
+              <TextField
+                label="Descrição"
+                value={dataEdit.description || ''}
+                onChange={(e) => setDataEdit({ ...dataEdit, description: e.target.value })}
+                fullWidth
+                sx={{ marginBottom: 2 }}
+              />
+              <TextField
+                label="Categoria"
+                value={dataEdit.category || ''}
+                onChange={(e) => setDataEdit({ ...dataEdit, category: e.target.value })}
+                fullWidth
+                sx={{ marginBottom: 2 }}
+              />
+              <Box>
+                <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
+                  Ingredientes
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', marginBottom: 2 }}>
+                  {dataEdit.ingredients && dataEdit.ingredients.length > 0 ? (
+                    dataEdit.ingredients.map((ingredient) => (
+                      <Chip
+                        key={ingredient.id}
+                        label={`${ingredient.name} (${ingredient.quantity})`}
+                        onDelete={() => handleRemoveIngredient(ingredient)}
+                        sx={{ marginBottom: 1 }}
+                      />
+                    ))
+                  ) : (
+                    <Typography variant="body2">Nenhum ingrediente adicionado</Typography>
+                  )}
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <TextField
+                    label="Adicionar ingrediente"
+                    value={newIngredient}
+                    onChange={(e) => setNewIngredient(e.target.value)}
+                    sx={{ flexGrow: 1, marginRight: 1 }}
+                  />
 
-          <Typography variant="h6" sx={{ display: 'flex', justifyContent: 'center' }}>Confirmação</Typography>
+                  <Button
+                    startIcon={<AddIcon sx={{ ml: 1.6 }} />}
+                    onClick={handleAddIngredient}
+                    sx={{
+                      padding: '0',
+                      minWidth: '0.1rem',
+                      minHeight: '0.1rem',
+                      backgroundColor: 'transparent',
+                      '&:hover': {
+                        backgroundColor: 'transparent',
+                      },
+                      '&:active': {
+                        backgroundColor: 'transparent',
+                        transform: 'none',
+                      },
+                    }}
+                  >
 
-          <Typography variant="body1">
-            Tem certeza de que deseja excluir o item "{postToDelete?.name}"?
-          </Typography>
-
+                  </Button>
+                </Box>
+              </Box>
+            </Box>
+          )}
         </DialogContent>
+
         <DialogActions>
 
           <Button
+            onClick={handleEditClose}
+            startIcon={<DeleteIcon />}
             variant="contained"
-            color="primary"
-            onClick={handleCancelDelete}
             sx={{
-              background: 'var(--darkblue2)',
-              fontWeight: 'bold',
+              mr: { xs: 0, sm: 0 },
+              ml: { xs: 1, sm: 1 },
+              gap: 2,
               flexGrow: { xs: 1, sm: 1 },
-              textTransform: 'uppercase',
+              backgroundColor: 'var(--darkblue2)',
+              color: 'var(--primary)',
+              borderRadius: '0.4rem',
+              padding: '0.5rem',
+              fontWeight: 'bold',
               transition: 'background-color 0.3s, transform 0.3s',
+
               // Animação
               '&:hover': {
-                transform: 'scale(1.03)',
+                transform: 'scale(1.02)',
               },
               '&:active': {
                 backgroundColor: 'var(--click)',
               },
             }}
           >
-            Voltar
+            Cancelar
           </Button>
 
           <Button
-            onClick={handleConfirmDelete}
-            color="error"
+            onClick={handleSaveModal}
+            startIcon={<SaveIcon />}
             variant="contained"
             sx={{
-              background: 'var(--delete)',
-              fontWeight: 'bold',
+              mr: { xs: 0, sm: 0 },
+              ml: { xs: 1, sm: 1 },
+              gap: 2,
               flexGrow: { xs: 1, sm: 1 },
-              textTransform: 'uppercase',
+              backgroundColor: 'var(--darkblue2)',
+              color: 'var(--primary)',
+              borderRadius: '0.4rem',
+              padding: '0.5rem',
+              fontWeight: 'bold',
               transition: 'background-color 0.3s, transform 0.3s',
+
               // Animação
               '&:hover': {
-                transform: 'scale(1.03)',
+                transform: 'scale(1.02)',
               },
               '&:active': {
                 backgroundColor: 'var(--click)',
               },
             }}
           >
-            Excluir
+            Salvar
           </Button>
+
         </DialogActions>
-      </Dialog>
+      </Dialog >
     </>
   );
 };

@@ -15,7 +15,7 @@ export const handleEdit = (post, setModeEdit, setDataEdit) => {
   setDataEdit(post);
 };
 
-//continua com erro, verificar!!
+
 export const handleSave = async (postId, updateData) => {
   try {
     // Envie uma requisição PUT ou POST para salvar os dados atualizados

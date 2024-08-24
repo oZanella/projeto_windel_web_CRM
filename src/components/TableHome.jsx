@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, Button, IconButton, Dialog, DialogContent, DialogActions, TextField, Chip, Paper, Checkbox, Pagination
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, Button, IconButton, Dialog, DialogContent, DialogActions, TextField, Paper, Checkbox, Pagination,
+  Chip
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import AddIcon from '@mui/icons-material/Add';
+import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
@@ -20,9 +22,11 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
   const [selectedPosts, setSelectedPosts] = useState([]);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
+  // Pagination
   const [page, setPage] = useState(1);
-  const itensPage = 6;
+  const itemsPerPage = 6;
 
   useEffect(() => {
     if (currentPost) {
@@ -78,10 +82,10 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
   };
 
   const handleSelectAll = () => {
-    if (selectedPosts.length === posts.length) {
+    if (selectedPosts.length === filteredPosts.length) {
       setSelectedPosts([]);
     } else {
-      setSelectedPosts(posts.map(post => post.id));
+      setSelectedPosts(filteredPosts.map(post => post.id));
     }
   };
 
@@ -108,10 +112,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
     setPage(value);
   };
 
-  const startIndex = (page - 1) * itensPage;
-  const endIndex = startIndex + itensPage;
-  const paginatedPosts = posts.slice(startIndex, endIndex);
-
   const handleDeleteClick = (post) => {
     setPostToDelete(post);
     setConfirmDialogOpen(true);
@@ -136,28 +136,59 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
     setConfirmDialogOpen(false);
   };
 
-  return (
-    <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-        <Button
-          variant="contained"
-          color="error"
-          startIcon={<DeleteIcon />}
-          onClick={handleDeleteSelected}
-          disabled={selectedPosts.length === 0}
-          sx={{ marginRight: 2 }}
-        >
-          Apagar Selecionados
-        </Button>
 
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<SelectAllIcon />}
-          onClick={handleSelectAll}
-        >
-          {selectedPosts.length === posts.length ? 'Desmarcar Todos' : 'Selecionar Todos'}
-        </Button>
+  const filteredPosts = posts.filter(post =>
+    post.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    post.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    post.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  //Logica de paginação
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
+
+  return (
+    <Box sx={{ padding: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        {/* Caixa de busca no lado esquerdo */}
+        <TextField
+          placeholder="Buscar..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          variant="outlined"
+          size="small"
+          InputProps={{
+            startAdornment: (
+              <IconButton position="start">
+                <SearchIcon />
+              </IconButton>
+            ),
+          }}
+          sx={{ marginRight: 2 }}
+        />
+
+        {/* Botões no lado direito */}
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Button
+            variant="contained"
+            color="error"
+            startIcon={<DeleteIcon />}
+            onClick={handleDeleteSelected}
+            disabled={selectedPosts.length === 0}
+            sx={{ marginRight: 2 }}
+          >
+            Apagar Selecionados
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<SelectAllIcon />}
+            onClick={handleSelectAll}
+          >
+            {selectedPosts.length === filteredPosts.length ? 'Desmarcar Todos' : 'Selecionar Todos'}
+          </Button>
+        </Box>
       </Box>
 
       <TableContainer component={Paper} sx={{ overflowX: 'auto' }}>
@@ -175,18 +206,15 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
             {paginatedPosts.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} align="center">
-                  <Typography variant="body1" sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Carregando informações...</Typography>
+                  <Typography variant="body1" sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Nenhum dado encontrado</Typography>
                 </TableCell>
               </TableRow>
             ) : (
               paginatedPosts.map((post) => (
-                <TableRow sx={{ height: 'auto' }} key={post.id}>
-                  <TableCell sx={{ padding: '8px' }}>
-                    {post.name}
-                  </TableCell>
-                  <TableCell sx={{ padding: '8px' }}>{post.description}</TableCell>
-                  <TableCell sx={{ padding: '8px' }}>{post.category}</TableCell>
-
+                <TableRow key={post.id}>
+                  <TableCell>{post.name}</TableCell>
+                  <TableCell>{post.description}</TableCell>
+                  <TableCell>{post.category}</TableCell>
                   <TableCell sx={{ padding: '8px' }}>
                     <Box sx={{
                       display: 'flex',
@@ -214,7 +242,7 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
                           </Box>
                         ))
                       ) : (
-                        <Typography variant="body2">Nenhum ingrediente disponível</Typography>
+                        <Typography variant="body2">Nenhum ingrediente</Typography>
                       )}
                     </Box>
                   </TableCell>
@@ -261,15 +289,16 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
         </Table>
       </TableContainer>
 
+      {/* Paginação */}
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
         <Pagination
-          count={Math.ceil(posts.length / itensPage)}
+          count={Math.ceil(filteredPosts.length / itemsPerPage)}
           page={page}
           onChange={handleChangePage}
-          color="primary"
         />
       </Box>
 
+      {/* Modal de Edição */}
       <Dialog open={openModal} onClose={handleEditClose} fullWidth maxWidth="sm">
         <DialogContent>
           {currentPost && (
@@ -405,7 +434,7 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
           </Button>
 
         </DialogActions>
-      </Dialog >
-    </>
+      </Dialog>
+    </Box>
   );
 };

@@ -93,7 +93,6 @@ export const ModalConfirmDelete = ({ open, onClose, onConfirm }) => {
         open={snackbarOpen}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         message="Excluído com sucesso"
       >
         <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>

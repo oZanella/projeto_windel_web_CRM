@@ -5,10 +5,16 @@ export const ModalConfirmDelete = ({ open, onClose, onConfirm }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleConfirm = () => {
+    // Perform the delete action
     onConfirm();
+
+    
     setSnackbarOpen(true);
+
+   
     onClose();
   };
+
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
@@ -93,7 +99,6 @@ export const ModalConfirmDelete = ({ open, onClose, onConfirm }) => {
         open={snackbarOpen}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         message="Excluído com sucesso"
       >
         <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>

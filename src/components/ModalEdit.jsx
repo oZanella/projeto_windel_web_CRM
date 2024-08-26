@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { Box, TextField, Typography, IconButton, Button, DialogContent } from '@mui/material';
+import { Box, TextField, Typography, IconButton, Button, DialogContent, Snackbar, Alert } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete'; // Importa o ícone de deletar
-
 import { API_BASE_URL } from './TableHome';
 
 export const ModalEdit = ({
@@ -16,8 +15,11 @@ export const ModalEdit = ({
   newIngredient,
   setNewIngredient,
   handleAddIngredient,
-  onClose, 
+  onClose, // onClose é passado do componente pai
 }) => {
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
   const handleUpdate = async () => {
     try {
@@ -31,14 +33,25 @@ export const ModalEdit = ({
         }
       );
       console.log('Atualização bem-sucedida:', response.data);
-      if (typeof onClose === 'function') {
-        onClose(); 
-        window.location.reload();
-        
-      }
+      setSnackbarMessage('Atualizado com sucesso'); // Mensagem de sucesso
+      setSnackbarSeverity('success'); // Tipo de alerta
+      setSnackbarOpen(true); // Exibe o snackbar
+      setTimeout(() => {
+        if (typeof onClose === 'function') {
+          onClose(); 
+        }
+        window.location.reload(); // Recarrega a página após a notificação
+      }, 2000); // Tempo para exibir a notificação
     } catch (error) {
       console.error('Erro ao atualizar:', error.response ? error.response.data : error.message);
+      setSnackbarMessage('Erro ao atualizar'); // Mensagem de erro
+      setSnackbarSeverity('error'); // Tipo de alerta
+      setSnackbarOpen(true); // Exibe o snackbar
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
   return (
@@ -177,6 +190,19 @@ export const ModalEdit = ({
           </Box>
         </Box>
       )}
+      
+      {/* Snackbar para exibir a mensagem de sucesso ou erro */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={2500}
+        transitionDuration={350}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </DialogContent>
   );
 };

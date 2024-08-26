@@ -61,7 +61,7 @@ export const Header = () => {
         >
           <Button variant="contained" component={Link} to={`/home`}>Home</Button>
           <Button variant="contained" component={Link} to={`/cadastro`}>Cadastro</Button>
-          <Button variant="contained" component={Link} to={`/configuracoes`}>Configurações</Button>
+          <Button variant="contained" component={Link} to={`/configuracoes`}>Guia de uso</Button>
         </Box>
       </Toolbar>
     </AppBar>

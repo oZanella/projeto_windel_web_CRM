@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Box, TextField, Typography, IconButton, Button, DialogContent, Snackbar, Alert } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import { Box, TextField, Typography, Button, DialogContent, Snackbar, Alert } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
-import DeleteIcon from '@mui/icons-material/Delete'; // Importa o ícone de deletar
 import { API_BASE_URL } from './TableHome';
 
 export const ModalEdit = ({
@@ -110,35 +108,11 @@ export const ModalEdit = ({
                     fullWidth
                     sx={{ marginBottom: 1 }}
                   />
-                  <IconButton onClick={() => handleRemoveIngredient(ingredient)}>
-                    <DeleteIcon />
-                  </IconButton>
                 </Box>
               ))
             ) : (
               <Typography variant="body2">Nenhum ingrediente adicionado</Typography>
             )}
-
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-              <TextField
-                label="Adicionar ingrediente"
-                value={newIngredient}
-                onChange={(e) => setNewIngredient(e.target.value)}
-                sx={{ flexGrow: 1, marginRight: 1 }}
-              />
-              <Button
-                startIcon={<AddIcon />}
-                onClick={handleAddIngredient}
-                sx={{
-                  minWidth: '0.1rem',
-                  minHeight: '0.1rem',
-                  backgroundColor: 'transparent',
-                  '&:hover': {
-                    backgroundColor: 'transparent',
-                  },
-                }}
-              />
-            </Box>
 
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
               <Button

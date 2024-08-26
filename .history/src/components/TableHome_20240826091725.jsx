@@ -1,8 +1,8 @@
-import { Box, IconButton, Dialog, TextField, Tooltip } from '@mui/material';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-import SearchIcon from '@mui/icons-material/Search';
 import React, { useState, useEffect } from 'react';
+import { Box, IconButton, Dialog, TextField, Tooltip } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { ButtonRight } from './Button';
 import { ModalEdit } from './ModalEdit';
 import { TablePag } from './TablePag';
@@ -49,7 +49,7 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
         quantity: 1
       };
 
-      setDataEdit(prevData => ({
+      setDataEdit((prevData) => ({
         ...prevData,
         ingredients: [...(prevData.ingredients || []), newIngredientObject],
       }));
@@ -58,9 +58,9 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
   };
 
   const handleRemoveIngredient = (ingredientToRemove) => {
-    setDataEdit(prevData => ({
+    setDataEdit((prevData) => ({
       ...prevData,
-      ingredients: (prevData.ingredients || []).filter(ingredient => ingredient.id !== ingredientToRemove.id),
+      ingredients: (prevData.ingredients || []).filter((ingredient) => ingredient.id !== ingredientToRemove.id),
     }));
   };
 
@@ -74,25 +74,37 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
 
   const handleDeleteSelected = async () => {
     console.log('IDs selecionados para exclusão:', selectedPosts);
+
     try {
-      const endpoint = `${API_BASE_URL}/recipe/delete-in-batch`;
-      const requestBody = { registersId: selectedPosts };
+      // Endpoint para deletar posts individuais
+      const endpoint = `${API_BASE_URL}/posts`;
 
-      console.log('Enviando solicitação DELETE para o URL:', endpoint);
-      console.log('Corpo da solicitação:', requestBody);
+      // Delete each post and wait for all deletions to complete
+      const deletePromises = selectedPosts.map(id => {
+        console.log(`Enviando solicitação DELETE para o post com ID: ${id}`);
+        return axios.delete(`${endpoint}/${id}`);
+      });
 
-      await axios.post(endpoint, requestBody);
+      const deleteResponses = await Promise.all(deletePromises);
+      console.log('Respostas da API após exclusão:', deleteResponses);
 
-      const response = await axios.get(`${API_BASE_URL}/recipe`);
+      // Fetch the updated list of posts
+      const response = await axios.get(endpoint);
       console.log('Posts atualizados:', response.data);
 
+      // Update state with the new list of posts
+      setPosts(response.data);
       setSelectedPosts([]);
-      console.log('Exclusão bem-sucedida.');
     } catch (error) {
-      console.error('Erro na exclusão:', error.response ? error.response.data : error.message);
+      if (error.response) {
+        // Se a resposta da API contém um erro, loga os detalhes
+        console.error('Erro na resposta da API:', error.response.data);
+      } else {
+        // Se o erro não tem uma resposta da API, loga a mensagem do erro
+        console.error('Erro ao excluir posts:', error.message);
+      }
     }
   };
-
 
   const handleSelectPost = (id) => {
     setSelectedPosts(prevSelected =>
@@ -114,6 +126,7 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
       post.category.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
+  // Logica de paginação
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
@@ -121,6 +134,8 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
   return (
     <Box sx={{ padding: 2 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+
+        {/* Caixa de busca */}
         <TextField
           placeholder="Buscar..."
           value={searchTerm}
@@ -136,13 +151,19 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
           }}
           sx={{ marginRight: 2 }}
         />
+
+        {/* Filtros adicionais */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+
           <Tooltip title={showFavoritesOnly ? 'Mostrar todos' : 'Mostrar favoritos apenas'}>
             <IconButton onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}>
               {showFavoritesOnly ? <StarIcon /> : <StarBorderIcon />}
             </IconButton>
           </Tooltip>
+
         </Box>
+
+        {/* Botões no lado direito */}
         <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
           <ButtonRight
             handleSelectAll={handleSelectAll}
@@ -152,6 +173,8 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
           />
         </Box>
       </Box>
+
+      {/* Tabela de exibição */}
       <TablePag
         paginatedPosts={paginatedPosts}
         selectedPosts={selectedPosts}
@@ -163,6 +186,8 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
         handleChangePage={handleChangePage}
         filteredPosts={filteredPosts}
       />
+
+      {/* Modal de Edição */}
       <Dialog open={openModal} onClose={handleEditClose} fullWidth maxWidth="sm">
         <ModalEdit
           currentPost={currentPost}
@@ -174,7 +199,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
           handleAddIngredient={handleAddIngredient}
           onClose={handleEditClose}
         />
-
       </Dialog>
     </Box>
   );

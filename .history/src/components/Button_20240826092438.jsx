@@ -19,7 +19,7 @@ export const ButtonRight = ({ handleSelectAll, selectedPosts, filteredPosts, han
     console.log('Posts selecionados para exclusão:', selectedPosts);
     console.log('Chamando handleDeleteSelected com esses IDs:', selectedPosts);
     try {
-      await handleDeleteSelected(selectedPosts);
+      await handleDeleteSelected();
       console.log('Exclusão bem-sucedida.');
     } catch (error) {
       console.error('Erro ao excluir posts:', error);

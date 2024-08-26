@@ -49,7 +49,7 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
         quantity: 1
       };
 
-      setDataEdit(prevData => ({
+      setDataEdit((prevData) => ({
         ...prevData,
         ingredients: [...(prevData.ingredients || []), newIngredientObject],
       }));
@@ -58,9 +58,9 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
   };
 
   const handleRemoveIngredient = (ingredientToRemove) => {
-    setDataEdit(prevData => ({
+    setDataEdit((prevData) => ({
       ...prevData,
-      ingredients: (prevData.ingredients || []).filter(ingredient => ingredient.id !== ingredientToRemove.id),
+      ingredients: (prevData.ingredients || []).filter((ingredient) => ingredient.id !== ingredientToRemove.id),
     }));
   };
 
@@ -74,10 +74,11 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
 
   const handleDeleteSelected = async () => {
     console.log('IDs selecionados para exclusão:', selectedPosts);
+
     try {
       const endpoint = `${API_BASE_URL}/recipe/delete-in-batch`;
-      const requestBody = { registersId: selectedPosts };
 
+      const requestBody = { registersId: selectedPosts };
       console.log('Enviando solicitação DELETE para o URL:', endpoint);
       console.log('Corpo da solicitação:', requestBody);
 
@@ -86,13 +87,24 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
       const response = await axios.get(`${API_BASE_URL}/recipe`);
       console.log('Posts atualizados:', response.data);
 
+      if (typeof setPosts === 'function') {
+        setPosts(response.data);
+      } else {
+        console.error('setPosts não é uma função');
+      }
+
       setSelectedPosts([]);
       console.log('Exclusão bem-sucedida.');
     } catch (error) {
-      console.error('Erro na exclusão:', error.response ? error.response.data : error.message);
+      if (error.response) {
+        console.error('Erro na resposta da API:', error.response.data);
+      } else if (error.request) {
+        console.error('Erro na solicitação:', error.request);
+      } else {
+        console.error('Erro ao configurar a solicitação:', error.message);
+      }
     }
   };
-
 
   const handleSelectPost = (id) => {
     setSelectedPosts(prevSelected =>
@@ -114,6 +126,7 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
       post.category.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
+  // Logica de paginação
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
@@ -174,7 +187,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
           handleAddIngredient={handleAddIngredient}
           onClose={handleEditClose}
         />
-
       </Dialog>
     </Box>
   );

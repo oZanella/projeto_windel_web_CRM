@@ -49,7 +49,7 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
         quantity: 1
       };
 
-      setDataEdit(prevData => ({
+      setDataEdit((prevData) => ({
         ...prevData,
         ingredients: [...(prevData.ingredients || []), newIngredientObject],
       }));
@@ -58,9 +58,9 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
   };
 
   const handleRemoveIngredient = (ingredientToRemove) => {
-    setDataEdit(prevData => ({
+    setDataEdit((prevData) => ({
       ...prevData,
-      ingredients: (prevData.ingredients || []).filter(ingredient => ingredient.id !== ingredientToRemove.id),
+      ingredients: (prevData.ingredients || []).filter((ingredient) => ingredient.id !== ingredientToRemove.id),
     }));
   };
 
@@ -72,27 +72,19 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
     }
   };
 
+
   const handleDeleteSelected = async () => {
-    console.log('IDs selecionados para exclusão:', selectedPosts);
     try {
-      const endpoint = `${API_BASE_URL}/recipe/delete-in-batch`;
-      const requestBody = { registersId: selectedPosts };
-
-      console.log('Enviando solicitação DELETE para o URL:', endpoint);
-      console.log('Corpo da solicitação:', requestBody);
-
-      await axios.post(endpoint, requestBody);
-
-      const response = await axios.get(`${API_BASE_URL}/recipe`);
-      console.log('Posts atualizados:', response.data);
-
-      setSelectedPosts([]);
-      console.log('Exclusão bem-sucedida.');
+      await Promise.all(
+        selectedRecipes.map((id) => recipeFetch.delete(/recipe/${ id }))
+      );
+      setSelectedRecipes([]);
+      handleCloseModal();
+      getRecipes();
     } catch (error) {
-      console.error('Erro na exclusão:', error.response ? error.response.data : error.message);
+      console.log("Ocorreu erro na funcao handleDeleteSelected", error);
     }
   };
-
 
   const handleSelectPost = (id) => {
     setSelectedPosts(prevSelected =>
@@ -114,6 +106,7 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
       post.category.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
+  // Logica de paginação
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
@@ -121,6 +114,8 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
   return (
     <Box sx={{ padding: 2 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+
+        {/* Caixa de busca */}
         <TextField
           placeholder="Buscar..."
           value={searchTerm}
@@ -136,13 +131,19 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
           }}
           sx={{ marginRight: 2 }}
         />
+
+        {/* Filtros adicionais */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+
           <Tooltip title={showFavoritesOnly ? 'Mostrar todos' : 'Mostrar favoritos apenas'}>
             <IconButton onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}>
               {showFavoritesOnly ? <StarIcon /> : <StarBorderIcon />}
             </IconButton>
           </Tooltip>
+
         </Box>
+
+        {/* Botões no lado direito */}
         <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
           <ButtonRight
             handleSelectAll={handleSelectAll}
@@ -152,6 +153,8 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
           />
         </Box>
       </Box>
+
+      {/* Tabela de exibição */}
       <TablePag
         paginatedPosts={paginatedPosts}
         selectedPosts={selectedPosts}
@@ -163,6 +166,8 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
         handleChangePage={handleChangePage}
         filteredPosts={filteredPosts}
       />
+
+      {/* Modal de Edição */}
       <Dialog open={openModal} onClose={handleEditClose} fullWidth maxWidth="sm">
         <ModalEdit
           currentPost={currentPost}
@@ -174,7 +179,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
           handleAddIngredient={handleAddIngredient}
           onClose={handleEditClose}
         />
-
       </Dialog>
     </Box>
   );

@@ -36,8 +36,7 @@ export const TablePag = ({
       console.log(postIdToDelete)
     }
     handleCloseModal(); 
-    console.log(postIdToDelete)
-   };
+    console.log(postIdToDelete) };
 
   return (
     <>

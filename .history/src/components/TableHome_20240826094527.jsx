@@ -74,6 +74,7 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
 
   const handleDeleteSelected = async () => {
     console.log('IDs selecionados para exclusão:', selectedPosts);
+
     try {
       const endpoint = `${API_BASE_URL}/recipe/delete-in-batch`;
       const requestBody = { registersId: selectedPosts };
@@ -86,13 +87,18 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
       const response = await axios.get(`${API_BASE_URL}/recipe`);
       console.log('Posts atualizados:', response.data);
 
+      if (typeof setPosts === 'function') {
+        setPosts(response.data);
+      } else {
+        console.error('setPosts não é uma função');
+      }
+
       setSelectedPosts([]);
       console.log('Exclusão bem-sucedida.');
     } catch (error) {
       console.error('Erro na exclusão:', error.response ? error.response.data : error.message);
     }
   };
-
 
   const handleSelectPost = (id) => {
     setSelectedPosts(prevSelected =>
@@ -174,7 +180,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
           handleAddIngredient={handleAddIngredient}
           onClose={handleEditClose}
         />
-
       </Dialog>
     </Box>
   );

@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Box, Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
+
 import { ModalConfirmDelete } from './ModalConfirmDelete';
 
-export const ButtonRight = ({ handleSelectAll, selectedPosts, filteredPosts, handleDeleteSelected }) => {
+export const ButtonRight = ({ handleSelectAll, selectedPosts, filteredPosts }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -15,17 +16,36 @@ export const ButtonRight = ({ handleSelectAll, selectedPosts, filteredPosts, han
     setModalOpen(false);
   };
 
-  const handleConfirmDelete = async () => {
-    console.log('Posts selecionados para exclusão:', selectedPosts);
-    console.log('Chamando handleDeleteSelected com esses IDs:', selectedPosts);
-    try {
-      await handleDeleteSelected(selectedPosts);
-      console.log('Exclusão bem-sucedida.');
-    } catch (error) {
-      console.error('Erro ao excluir posts:', error);
-    }
+  const handleConfirmDelete = () => {
+    handleDeleteSelected(selectedPosts);
     handleCloseModal();
   };
+
+  const handleDeleteSelected = (postsToDelete) => {
+    fetch('https://teste-tecnico-front-api.up.railway.app/recipe/delete-in-batch', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ids: postsToDelete }),
+    })
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then(text => {
+            throw new Error('Erro na resposta da API: ' + response.status + ' - ' + text);
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Resposta da API:', data);
+        setPosts(prevPosts => prevPosts.filter(post => !postsToDelete.includes(post.id)));
+      })
+      .catch(error => {
+        console.error('Erro ao excluir posts:', error);
+      });
+  };
+
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -40,12 +60,13 @@ export const ButtonRight = ({ handleSelectAll, selectedPosts, filteredPosts, han
         Apagar Selecionados
       </Button>
 
+
       <Button
         variant="contained"
         startIcon={<SelectAllIcon />}
         onClick={handleSelectAll}
         sx={{
-          background: 'var(--roxo)',
+          background: 'var(--roxo)'
         }}
       >
         {selectedPosts.length === filteredPosts.length ? 'Desmarcar Todos' : 'Selecionar Todos'}
@@ -60,3 +81,4 @@ export const ButtonRight = ({ handleSelectAll, selectedPosts, filteredPosts, han
     </Box>
   );
 };
+

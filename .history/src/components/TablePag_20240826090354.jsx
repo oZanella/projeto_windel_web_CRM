@@ -33,11 +33,10 @@ export const TablePag = ({
   const handleConfirmDelete = () => {
     if (postIdToDelete !== null) {
       handleDelete(postIdToDelete);
-      console.log(postIdToDelete)
+      console.log('')
     }
-    handleCloseModal(); 
-    console.log(postIdToDelete)
-   };
+    handleCloseModal();
+  };
 
   return (
     <>

@@ -1,9 +1,3 @@
-import React, { useState } from 'react';
-import { Box, Button } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SelectAllIcon from '@mui/icons-material/SelectAll';
-import { ModalConfirmDelete } from './ModalConfirmDelete';
-
 export const ButtonRight = ({ handleSelectAll, selectedPosts, filteredPosts, handleDeleteSelected }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -18,6 +12,7 @@ export const ButtonRight = ({ handleSelectAll, selectedPosts, filteredPosts, han
   const handleConfirmDelete = async () => {
     console.log('Posts selecionados para exclusão:', selectedPosts);
     console.log('Chamando handleDeleteSelected com esses IDs:', selectedPosts);
+
     try {
       await handleDeleteSelected(selectedPosts);
       console.log('Exclusão bem-sucedida.');

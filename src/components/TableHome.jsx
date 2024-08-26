@@ -173,6 +173,7 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
           newIngredient={newIngredient}
           setNewIngredient={setNewIngredient}
           handleAddIngredient={handleAddIngredient}
+          onClose={handleEditClose}
         />
 
       </Dialog>

@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Box, TextField, Typography, Chip, Button, IconButton, DialogContent } from '@mui/material';
+import { Box, TextField, Typography, IconButton, Button, DialogContent } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -16,7 +16,7 @@ export const ModalEdit = ({
   newIngredient,
   setNewIngredient,
   handleAddIngredient,
-  onClose,
+  onClose, 
 }) => {
 
   const handleUpdate = async () => {
@@ -31,7 +31,13 @@ export const ModalEdit = ({
         }
       );
       console.log('Atualização bem-sucedida:', response.data);
-      onClose();
+
+      
+      window.location.reload();
+
+      if (typeof onClose === 'function') {
+        onClose(); 
+      }
     } catch (error) {
       console.error('Erro ao atualizar:', error.response ? error.response.data : error.message);
     }
@@ -134,7 +140,7 @@ export const ModalEdit = ({
                 startIcon={<CancelIcon />}
                 variant="contained"
                 sx={{
-                  flex: 1,  
+                  flex: 1,
                   backgroundColor: 'var(--darkblue2)',
                   color: 'var(--primary)',
                   borderRadius: '0.4rem',
@@ -157,7 +163,7 @@ export const ModalEdit = ({
                 startIcon={<SaveIcon />}
                 variant="contained"
                 sx={{
-                  flex: 1,  
+                  flex: 1,
                   backgroundColor: 'var(--darkblue2)',
                   color: 'var(--primary)',
                   borderRadius: '0.4rem',

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Checkbox, IconButton, Chip, Pagination } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import {ModalConfirmDelete} from './ModalConfirmDelete'; 
 
 export const TablePag = ({
   paginatedPosts,
@@ -15,6 +16,26 @@ export const TablePag = ({
   handleChangePage,
   filteredPosts,
 }) => {
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [postIdToDelete, setPostIdToDelete] = useState(null);
+
+  const handleOpenModal = (postId) => {
+    setPostIdToDelete(postId);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setPostIdToDelete(null);
+  };
+
+  const handleConfirmDelete = () => {
+    if (postIdToDelete !== null) {
+      handleDelete(postIdToDelete);
+    }
+    handleCloseModal();
+  };
+
   return (
     <>
       {/* Tabela de exibição */}
@@ -88,9 +109,10 @@ export const TablePag = ({
                       >
                         <EditIcon />
                       </IconButton>
+                      
                       <IconButton
                         color="error"
-                        onClick={() => handleDelete(post.id)}
+                        onClick={() => handleOpenModal(post.id)}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -124,6 +146,13 @@ export const TablePag = ({
           onChange={handleChangePage}
         />
       </Box>
+
+      {/* Modal de Confirmação de Exclusão */}
+      <ModalConfirmDelete
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirmDelete}
+      />
     </>
   );
 };

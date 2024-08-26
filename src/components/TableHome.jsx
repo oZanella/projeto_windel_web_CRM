@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import {Box, IconButton, Dialog, DialogActions, TextField, Pagination} from '@mui/material';
-import { ButtonRight, ButtonEditModal } from './Button';
+import {Box, IconButton, Dialog, TextField} from '@mui/material';
+import { ButtonRight } from './Button';
 import SearchIcon from '@mui/icons-material/Search';
 import { ModalEdit } from './ModalEdit';
 import { TablePag } from './TablePag';
 
+
 import axios from 'axios';
 
-const API_BASE_URL = 'https://teste-tecnico-front-api.up.railway.app';
+export const API_BASE_URL = 'https://teste-tecnico-front-api.up.railway.app';
 
 export const CardDados = ({ posts, setPosts, handleDelete }) => {
   const [openModal, setOpenModal] = useState(false);
@@ -15,8 +16,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
   const [dataEdit, setDataEdit] = useState({});
   const [newIngredient, setNewIngredient] = useState('');
   const [selectedPosts, setSelectedPosts] = useState([]);
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [postToDelete, setPostToDelete] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   // Pagination
@@ -107,30 +106,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
     setPage(value);
   };
 
-  const handleDeleteClick = (post) => {
-    setPostToDelete(post);
-    setConfirmDialogOpen(true);
-  };
-
-  const handleConfirmDelete = async () => {
-    if (postToDelete) {
-      try {
-        await axios.delete(`${API_BASE_URL}/posts/${postToDelete.id}`);
-        const response = await axios.get(`${API_BASE_URL}/posts`);
-        setPosts(response.data);
-        setPostToDelete(null);
-        setConfirmDialogOpen(false);
-      } catch (error) {
-        console.error('Error ao apagar o registro:', error);
-      }
-    }
-  };
-
-  const handleCancelDelete = () => {
-    setPostToDelete(null);
-    setConfirmDialogOpen(false);
-  };
-
   const filteredPosts = posts.filter(post =>
     post.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     post.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -200,12 +175,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
           handleAddIngredient={handleAddIngredient}
         />
 
-        <DialogActions>
-          <ButtonEditModal
-            handleEditClose={handleEditClose}
-            handleSaveModal={handleSaveModal}
-          />
-        </DialogActions>
       </Dialog>
     </Box>
   );

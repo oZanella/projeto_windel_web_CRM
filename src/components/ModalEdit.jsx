@@ -134,6 +134,7 @@ export const ModalEdit = ({
                 startIcon={<CancelIcon />}
                 variant="contained"
                 sx={{
+                  flex: 1,  
                   backgroundColor: 'var(--darkblue2)',
                   color: 'var(--primary)',
                   borderRadius: '0.4rem',
@@ -156,6 +157,7 @@ export const ModalEdit = ({
                 startIcon={<SaveIcon />}
                 variant="contained"
                 sx={{
+                  flex: 1,  
                   backgroundColor: 'var(--darkblue2)',
                   color: 'var(--primary)',
                   borderRadius: '0.4rem',

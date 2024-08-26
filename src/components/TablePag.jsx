@@ -3,7 +3,8 @@ import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
-import {ModalConfirmDelete} from './ModalConfirmDelete'; 
+import CakeOutlinedIcon from '@mui/icons-material/CakeOutlined';
+import { ModalConfirmDelete } from './ModalConfirmDelete';
 
 export const TablePag = ({
   paginatedPosts,
@@ -38,107 +39,113 @@ export const TablePag = ({
 
   return (
     <>
-      {/* Tabela de exibição */}
       <TableContainer component={Paper} sx={{ overflowX: 'auto' }}>
         <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Nome</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Descrição</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Categoria</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Ingredientes</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Ação</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {paginatedPosts.length === 0 ? (
+          {paginatedPosts.length === 0 ? (
+            <TableBody>
               <TableRow>
                 <TableCell colSpan={5} align="center">
-                  <Typography variant="body1" sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Nenhum dado encontrado</Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2 }}>
+                    <CakeOutlinedIcon sx={{ fontSize: 90 }} />
+                    <Typography variant="body1" sx={{ mt: 1, fontWeight: 'bold', textTransform: 'uppercase' }}>
+                      Nenhuma receita localizada...
+                    </Typography>
+                  </Box>
                 </TableCell>
               </TableRow>
-            ) : (
-              paginatedPosts.map((post) => (
-                <TableRow key={post.id}>
-                  <TableCell>{post.name}</TableCell>
-                  <TableCell>{post.description}</TableCell>
-                  <TableCell>{post.category}</TableCell>
-                  <TableCell sx={{ padding: '8px' }}>
-                    <Box sx={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      overflowX: 'auto',
-                      gap: 1,
-                      width: '100%',
-                    }}>
-                      {post.ingredients && post.ingredients.length > 0 ? (
-                        post.ingredients.map((ingredient) => (
-                          <Box
-                            key={ingredient.id}
-                            sx={{
-                              display: 'flex',
-                              flexDirection: 'column',
-                              alignItems: 'flex-start',
-                              marginRight: 1,
-                              marginBottom: 1,
-                            }}
-                          >
-                            <Typography variant="body1">{ingredient.name}</Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              Quantidade: {ingredient.quantity}
-                            </Typography>
-                          </Box>
-                        ))
-                      ) : (
-                        <Typography variant="body2">Nenhum ingrediente</Typography>
-                      )}
-                    </Box>
-                  </TableCell>
-
-                  <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Checkbox
-                        checked={selectedPosts.includes(post.id)}
-                        onChange={() => handleSelectPost(post.id)}
-                        color="primary"
-                      />
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleEditOpen(post)}
-                        sx={{ mr: 1 }}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      
-                      <IconButton
-                        color="error"
-                        onClick={() => handleOpenModal(post.id)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-
-                      {post.isFavorite && (
-                        <Chip
-                          icon={
-                            <StarOutlineIcon sx={{ color: '#FFD700 !important' }} />
-                          }
-                          sx={{
-                            cursor: 'default',
-                            ml: 2,
-                            backgroundColor: 'transparent',
-                          }}
-                        />
-                      )}
-                    </Box>
-                  </TableCell>
+            </TableBody>
+          ) : (
+            <>
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Nome</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Descrição</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Categoria</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Ingredientes</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Ação</TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
+              </TableHead>
+              <TableBody>
+                {paginatedPosts.map((post) => (
+                  <TableRow key={post.id}>
+                    <TableCell>{post.name}</TableCell>
+                    <TableCell>{post.description}</TableCell>
+                    <TableCell>{post.category}</TableCell>
+                    <TableCell sx={{ padding: '8px' }}>
+                      <Box sx={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        overflowX: 'auto',
+                        gap: 1,
+                        width: '100%',
+                      }}>
+                        {post.ingredients && post.ingredients.length > 0 ? (
+                          post.ingredients.map((ingredient) => (
+                            <Box
+                              key={ingredient.id}
+                              sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'flex-start',
+                                marginRight: 1,
+                                marginBottom: 1,
+                              }}
+                            >
+                              <Typography variant="body1">{ingredient.name}</Typography>
+                              <Typography variant="body2" color="textSecondary">
+                                Quantidade: {ingredient.quantity}
+                              </Typography>
+                            </Box>
+                          ))
+                        ) : (
+                          <Typography variant="body2">Nenhum ingrediente</Typography>
+                        )}
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Checkbox
+                          checked={selectedPosts.includes(post.id)}
+                          onChange={() => handleSelectPost(post.id)}
+                          color="primary"
+                        />
+                        <IconButton
+                          color="primary"
+                          onClick={() => handleEditOpen(post)}
+                          sx={{ mr: 1 }}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        
+                        <IconButton
+                          color="error"
+                          onClick={() => handleOpenModal(post.id)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+
+                        {post.isFavorite && (
+                          <Chip
+                            icon={
+                              <StarOutlineIcon sx={{ color: '#FFD700 !important' }} />
+                            }
+                            sx={{
+                              cursor: 'default',
+                              ml: 2,
+                              backgroundColor: 'transparent',
+                            }}
+                          />
+                        )}
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </>
+          )}
         </Table>
       </TableContainer>
 
-      {/* Paginação */}
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
         <Pagination
           count={Math.ceil(filteredPosts.length / itemsPerPage)}
@@ -147,7 +154,6 @@ export const TablePag = ({
         />
       </Box>
 
-      {/* Modal de Confirmação de Exclusão */}
       <ModalConfirmDelete
         open={isModalOpen}
         onClose={handleCloseModal}

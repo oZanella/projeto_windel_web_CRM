@@ -9,10 +9,6 @@ export const ModalEdit = ({
   currentPost,
   dataEdit,
   setDataEdit,
-  handleRemoveIngredient,
-  newIngredient,
-  setNewIngredient,
-  handleAddIngredient,
   onClose, // onClose é passado do componente pai
 }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -50,6 +46,19 @@ export const ModalEdit = ({
 
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
+  };
+
+  const handleQuantityChange = (index, value) => {
+    if (value <= 0) {
+      setSnackbarMessage('A quantidade deve ser maior que 0'); // Mensagem de erro
+      setSnackbarSeverity('warning'); // Tipo de alerta
+      setSnackbarOpen(true); // Exibe o snackbar
+      return; // Não atualiza o ingrediente se a quantidade for <= 0
+    }
+
+    const updatedIngredients = [...dataEdit.ingredients];
+    updatedIngredients[index] = { ...updatedIngredients[index], quantity: value };
+    setDataEdit({ ...dataEdit, ingredients: updatedIngredients });
   };
 
   return (
@@ -99,12 +108,8 @@ export const ModalEdit = ({
                     label="Quantidade"
                     type="number"
                     value={ingredient.quantity}
-                    onChange={(e) => {
-                      const updatedIngredients = [...dataEdit.ingredients];
-                      updatedIngredients[index] = { ...updatedIngredients[index], quantity: parseInt(e.target.value, 10) || 0 };
-                      setDataEdit({ ...dataEdit, ingredients: updatedIngredients });
-                    }}
-                    InputProps={{ inputProps: { min: 0 } }}
+                    onChange={(e) => handleQuantityChange(index, parseInt(e.target.value, 10) || 0)}
+                    InputProps={{ inputProps: { min: 1 } }} // Define o valor mínimo como 1
                     fullWidth
                     sx={{ marginBottom: 1 }}
                   />

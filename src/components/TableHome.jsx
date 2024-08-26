@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import {Box, IconButton, Dialog, TextField} from '@mui/material';
+import { Box, IconButton, Dialog, TextField, MenuItem, Select, FormControl, InputLabel, Tooltip } from '@mui/material';
 import { ButtonRight } from './Button';
 import SearchIcon from '@mui/icons-material/Search';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { ModalEdit } from './ModalEdit';
 import { TablePag } from './TablePag';
-
-
 import axios from 'axios';
 
 export const API_BASE_URL = 'https://teste-tecnico-front-api.up.railway.app';
@@ -17,6 +17,8 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
   const [newIngredient, setNewIngredient] = useState('');
   const [selectedPosts, setSelectedPosts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
 
   // Pagination
   const [page, setPage] = useState(1);
@@ -37,19 +39,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
     setOpenModal(false);
     setCurrentPost(null);
     setNewIngredient('');
-  };
-
-  const handleSaveModal = async () => {
-    if (currentPost) {
-      try {
-        await axios.put(`${API_BASE_URL}/posts/${currentPost.id}`, dataEdit);
-        const response = await axios.get(`${API_BASE_URL}/posts`);
-        setPosts(response.data);
-        handleEditClose();
-      } catch (error) {
-        console.error('Error ao salvar:', error);
-      }
-    }
   };
 
   const handleAddIngredient = () => {
@@ -107,21 +96,23 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
   };
 
   const filteredPosts = posts.filter(post =>
-    post.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    post.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    post.category.toLowerCase().includes(searchTerm.toLowerCase())
+    (!showFavoritesOnly || post.isFavorite) &&
+    (!selectedCategory || post.category === selectedCategory) &&
+    (post.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     post.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     post.category.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  //Logica de paginação
+  // Logica de paginação
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
 
   return (
     <Box sx={{ padding: 2 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        
-        {/* Caixa de busca no lado esquerdo */}
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+
+        {/* Caixa de busca */}
         <TextField
           placeholder="Buscar..."
           value={searchTerm}
@@ -138,8 +129,19 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
           sx={{ marginRight: 2 }}
         />
 
+        {/* Filtros adicionais */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+
+          <Tooltip title={showFavoritesOnly ? 'Mostrar todos' : 'Mostrar favoritos apenas'}>
+            <IconButton onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}>
+              {showFavoritesOnly ? <StarIcon /> : <StarBorderIcon />}
+            </IconButton>
+          </Tooltip>
+
+        </Box>
+
         {/* Botões no lado direito */}
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
           <ButtonRight
             handleDeleteSelected={handleDeleteSelected}
             handleSelectAll={handleSelectAll}
@@ -164,7 +166,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
 
       {/* Modal de Edição */}
       <Dialog open={openModal} onClose={handleEditClose} fullWidth maxWidth="sm">
-
         <ModalEdit
           currentPost={currentPost}
           dataEdit={dataEdit}
@@ -175,7 +176,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
           handleAddIngredient={handleAddIngredient}
           onClose={handleEditClose}
         />
-
       </Dialog>
     </Box>
   );

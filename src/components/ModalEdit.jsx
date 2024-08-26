@@ -31,12 +31,10 @@ export const ModalEdit = ({
         }
       );
       console.log('Atualização bem-sucedida:', response.data);
-
-      
-      window.location.reload();
-
       if (typeof onClose === 'function') {
         onClose(); 
+        window.location.reload();
+        
       }
     } catch (error) {
       console.error('Erro ao atualizar:', error.response ? error.response.data : error.message);
@@ -71,7 +69,7 @@ export const ModalEdit = ({
               sx={{ marginBottom: 2 }}
             />
 
-            <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>Ingredientes</Typography>
+            <Typography variant="subtitle1" sx={{ mb: 1 }}>Ingredientes</Typography>
             {dataEdit.ingredients && dataEdit.ingredients.length > 0 ? (
               dataEdit.ingredients.map((ingredient, index) => (
                 <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -108,7 +106,7 @@ export const ModalEdit = ({
               <Typography variant="body2">Nenhum ingrediente adicionado</Typography>
             )}
 
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, marginBottom: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
               <TextField
                 label="Adicionar ingrediente"
                 value={newIngredient}
@@ -119,16 +117,11 @@ export const ModalEdit = ({
                 startIcon={<AddIcon />}
                 onClick={handleAddIngredient}
                 sx={{
-                  padding: '0',
                   minWidth: '0.1rem',
                   minHeight: '0.1rem',
                   backgroundColor: 'transparent',
                   '&:hover': {
                     backgroundColor: 'transparent',
-                  },
-                  '&:active': {
-                    backgroundColor: 'transparent',
-                    transform: 'none',
                   },
                 }}
               />

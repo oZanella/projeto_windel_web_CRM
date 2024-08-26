@@ -1,4 +1,4 @@
-import { Box, IconButton, Dialog, TextField, Tooltip } from '@mui/material';
+import { Box, IconButton, Dialog, TextField, Tooltip, Snackbar, Alert } from '@mui/material';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import SearchIcon from '@mui/icons-material/Search';
 import React, { useState, useEffect } from 'react';
@@ -19,6 +19,11 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  
+  // Snackbar state
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // 'success' or 'error'
 
   // Pagination
   const [page, setPage] = useState(1);
@@ -72,7 +77,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
     }
   };
 
-  
   const handleDeleteSelected = async () => {
     console.log('IDs selecionados para exclusão:', selectedPosts);
     try {
@@ -84,17 +88,25 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
 
       await axios.post(endpoint, requestBody);
 
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-
       const response = await axios.get(`${API_BASE_URL}/recipe`);
       console.log('Posts atualizados:', response.data);
 
+      setPosts(response.data); // Atualiza a lista de posts
       setSelectedPosts([]);
-      console.log('Exclusão bem-sucedida.');
+      setSnackbarMessage('Exclusão bem-sucedida.');
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
+      setTimeout(() => {
+        setSnackbarOpen(false); // Fecha o Snackbar após 3 segundos
+      }, 3000);
     } catch (error) {
       console.error('Erro na exclusão:', error.response ? error.response.data : error.message);
+      setSnackbarMessage('Erro na exclusão');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+      setTimeout(() => {
+        setSnackbarOpen(false); 
+      }, 3000);
     }
   };
 
@@ -110,6 +122,38 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
     setPage(value);
   };
 
+  const handleUpdate = async () => {
+    try {
+      const response = await axios.patch(
+        `${API_BASE_URL}/recipe/${currentPost.id}`,
+        dataEdit,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      console.log('Atualização bem-sucedida:', response.data);
+      setSnackbarMessage('Atualizado com sucesso');
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
+      setTimeout(() => {
+        if (typeof handleEditClose === 'function') {
+          handleEditClose();
+        }
+        window.location.reload();
+      }, 3000);
+    } catch (error) {
+      console.error('Erro ao atualizar:', error.response ? error.response.data : error.message);
+      setSnackbarMessage('Erro ao atualizar');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+      setTimeout(() => {
+        setSnackbarOpen(false); 
+      }, 3000);
+    }
+  };
+
   const filteredPosts = posts.filter(post =>
     (!showFavoritesOnly || post.isFavorite) &&
     (!selectedCategory || post.category === selectedCategory) &&
@@ -121,6 +165,10 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   return (
     <Box sx={{ padding: 2 }}>
@@ -177,9 +225,18 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
           setNewIngredient={setNewIngredient}
           handleAddIngredient={handleAddIngredient}
           onClose={handleEditClose}
+          handleUpdate={handleUpdate} // Adiciona a função handleUpdate
         />
-
       </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

@@ -72,7 +72,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
     }
   };
 
-  
   const handleDeleteSelected = async () => {
     console.log('IDs selecionados para exclusão:', selectedPosts);
     try {
@@ -84,19 +83,31 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
 
       await axios.post(endpoint, requestBody);
 
+      // Mensagem de sucesso
+      alert('Exclusão bem-sucedida.');
+
+      // Recarregar a página após 2 segundos
       setTimeout(() => {
         window.location.reload();
-      }, 2000);
-
-      const response = await axios.get(`${API_BASE_URL}/recipe`);
-      console.log('Posts atualizados:', response.data);
+      }, 2000); // 2000 milissegundos = 2 segundos
 
       setSelectedPosts([]);
-      console.log('Exclusão bem-sucedida.');
     } catch (error) {
+      // Mensagem de erro
+      alert('Erro na exclusão. Por favor, tente novamente.');
+
       console.error('Erro na exclusão:', error.response ? error.response.data : error.message);
     }
   };
+
+  const handleSelectPost = (id) => {
+    setSelectedPosts(prevSelected =>
+      prevSelected.includes(id)
+        ? prevSelected.filter(postId => postId !== id)
+        : [...prevSelected, id]
+    );
+  };
+
 
   const handleSelectPost = (id) => {
     setSelectedPosts(prevSelected =>

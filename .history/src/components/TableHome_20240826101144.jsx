@@ -30,6 +30,16 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
     }
   }, [currentPost]);
 
+  // Function to load posts from API
+  const loadPosts = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/recipe`);
+      setPosts(response.data);
+    } catch (error) {
+      console.error('Erro ao carregar posts:', error.response ? error.response.data : error.message);
+    }
+  };
+
   const handleEditOpen = (post) => {
     setCurrentPost(post);
     setOpenModal(true);
@@ -72,7 +82,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
     }
   };
 
-  
   const handleDeleteSelected = async () => {
     console.log('IDs selecionados para exclusão:', selectedPosts);
     try {
@@ -84,12 +93,8 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
 
       await axios.post(endpoint, requestBody);
 
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-
-      const response = await axios.get(`${API_BASE_URL}/recipe`);
-      console.log('Posts atualizados:', response.data);
+      // Reload posts after deletion
+      await loadPosts();
 
       setSelectedPosts([]);
       console.log('Exclusão bem-sucedida.');
@@ -178,7 +183,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
           handleAddIngredient={handleAddIngredient}
           onClose={handleEditClose}
         />
-
       </Dialog>
     </Box>
   );

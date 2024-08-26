@@ -72,9 +72,9 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
     }
   };
 
-  
   const handleDeleteSelected = async () => {
     console.log('IDs selecionados para exclusão:', selectedPosts);
+
     try {
       const endpoint = `${API_BASE_URL}/recipe/delete-in-batch`;
       const requestBody = { registersId: selectedPosts };
@@ -82,21 +82,25 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
       console.log('Enviando solicitação DELETE para o URL:', endpoint);
       console.log('Corpo da solicitação:', requestBody);
 
-      await axios.post(endpoint, requestBody);
+      await axios.delete(endpoint, { data: requestBody });
 
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-
+      // Atualize o estado local em vez de recarregar a página
       const response = await axios.get(`${API_BASE_URL}/recipe`);
       console.log('Posts atualizados:', response.data);
 
+      // Atualize o estado com a nova lista de posts
+      setPosts(response.data);  // Supondo que setPosts seja a função para atualizar o estado dos posts
+
+      // Limpar a seleção de posts
       setSelectedPosts([]);
       console.log('Exclusão bem-sucedida.');
     } catch (error) {
       console.error('Erro na exclusão:', error.response ? error.response.data : error.message);
     }
   };
+
+
+
 
   const handleSelectPost = (id) => {
     setSelectedPosts(prevSelected =>

@@ -72,7 +72,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
     }
   };
 
-  
   const handleDeleteSelected = async () => {
     console.log('IDs selecionados para exclusão:', selectedPosts);
     try {
@@ -84,10 +83,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
 
       await axios.post(endpoint, requestBody);
 
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-
       const response = await axios.get(`${API_BASE_URL}/recipe`);
       console.log('Posts atualizados:', response.data);
 
@@ -97,6 +92,7 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
       console.error('Erro na exclusão:', error.response ? error.response.data : error.message);
     }
   };
+
 
   const handleSelectPost = (id) => {
     setSelectedPosts(prevSelected =>

@@ -72,6 +72,13 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
     }
   };
 
+  const handleSelectPost = (id) => {
+    setSelectedPosts(prevSelected =>
+      prevSelected.includes(id)
+        ? prevSelected.filter(postId => postId !== id)
+        : [...prevSelected, id]
+    );
+  };
   
   const handleDeleteSelected = async () => {
     console.log('IDs selecionados para exclusão:', selectedPosts);

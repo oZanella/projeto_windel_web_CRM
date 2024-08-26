@@ -72,7 +72,7 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
     }
   };
 
-  
+  //bomba
   const handleDeleteSelected = async () => {
     console.log('IDs selecionados para exclusão:', selectedPosts);
     try {
@@ -83,10 +83,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
       console.log('Corpo da solicitação:', requestBody);
 
       await axios.post(endpoint, requestBody);
-
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
 
       const response = await axios.get(`${API_BASE_URL}/recipe`);
       console.log('Posts atualizados:', response.data);

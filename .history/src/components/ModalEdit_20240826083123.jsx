@@ -9,7 +9,7 @@ export const ModalEdit = ({
   currentPost,
   dataEdit,
   setDataEdit,
-  onClose, 
+  onClose, // onClose é passado do componente pai
 }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');

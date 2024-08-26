@@ -72,7 +72,6 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
     }
   };
 
-  
   const handleDeleteSelected = async () => {
     console.log('IDs selecionados para exclusão:', selectedPosts);
     try {
@@ -84,19 +83,27 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
 
       await axios.post(endpoint, requestBody);
 
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-
+      // Atualize os posts após a exclusão
       const response = await axios.get(`${API_BASE_URL}/recipe`);
       console.log('Posts atualizados:', response.data);
 
+      if (typeof setPosts === 'function') {
+        setPosts(response.data);
+      } else {
+        console.error('setPosts não é uma função:', setPosts);
+      }
+
       setSelectedPosts([]);
       console.log('Exclusão bem-sucedida.');
+
+      // Se precisar recarregar a página (não recomendado)
+      // window.location.reload();
     } catch (error) {
       console.error('Erro na exclusão:', error.response ? error.response.data : error.message);
     }
   };
+
+
 
   const handleSelectPost = (id) => {
     setSelectedPosts(prevSelected =>

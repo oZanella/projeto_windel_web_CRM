@@ -30,21 +30,11 @@ export const ButtonRight = ({ handleSelectAll, selectedPosts, filteredPosts, han
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
       <Button
-        variant="contained"
+        variant="contained
         startIcon={<DeleteIcon />}
         onClick={handleOpenModal}
         disabled={selectedPosts.length === 0}
-        sx={{
-          marginRight: 2,
-          background: 'var(--new)',
-          '&:hover': {
-            backgroundColor: 'var(--new)',
-            transform: 'scale(1.02)',
-          },
-          '&:active': {
-            backgroundColor: 'var(--click)',
-          },
-        }}
+        sx={{ marginRight: 2 }}
       >
         Apagar Selecionados
       </Button>
@@ -55,13 +45,6 @@ export const ButtonRight = ({ handleSelectAll, selectedPosts, filteredPosts, han
         onClick={handleSelectAll}
         sx={{
           background: 'var(--roxo)',
-          '&:hover': {
-            backgroundColor: 'var(--new)',
-            transform: 'scale(1.02)',
-          },
-          '&:active': {
-            backgroundColor: 'var(--click)',
-          },
         }}
       >
         {selectedPosts.length === filteredPosts.length ? 'Desmarcar Todos' : 'Selecionar Todos'}

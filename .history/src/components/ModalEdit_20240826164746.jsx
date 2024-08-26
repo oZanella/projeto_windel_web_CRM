@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Box, TextField, Typography, Button, DialogContent, Snackbar, Alert } from '@mui/material';
+import { Box, TextField, Typography, Button, DialogContent, Snackbar, Alert, IconButton } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 import { API_BASE_URL } from './TableHome';
 
 export const ModalEdit = ({
@@ -19,7 +21,7 @@ export const ModalEdit = ({
     try {
       const response = await axios.patch(
         `${API_BASE_URL}/recipe/${currentPost.id}`,
-        dataEdit,
+        dataEdit, // Certifique-se de que `dataEdit` está atualizado
         {
           headers: {
             'Content-Type': 'application/json',
@@ -58,6 +60,21 @@ export const ModalEdit = ({
 
     const updatedIngredients = [...dataEdit.ingredients];
     updatedIngredients[index] = { ...updatedIngredients[index], quantity: value };
+    setDataEdit({ ...dataEdit, ingredients: updatedIngredients });
+  };
+
+  const handleAddIngredient = () => {
+    setDataEdit({
+      ...dataEdit,
+      ingredients: [
+        ...dataEdit.ingredients,
+        { name: '', quantity: 1 }
+      ]
+    });
+  };
+
+  const handleRemoveIngredient = (index) => {
+    const updatedIngredients = dataEdit.ingredients.filter((_, i) => i !== index);
     setDataEdit({ ...dataEdit, ingredients: updatedIngredients });
   };
 
@@ -113,11 +130,22 @@ export const ModalEdit = ({
                     fullWidth
                     sx={{ marginBottom: 1 }}
                   />
+                  <IconButton onClick={() => handleRemoveIngredient(index)} color="error">
+                    <DeleteIcon />
+                  </IconButton>
                 </Box>
               ))
             ) : (
               <Typography variant="body2">Nenhum ingrediente adicionado</Typography>
             )}
+            <Button
+              onClick={handleAddIngredient}
+              startIcon={<AddIcon />}
+              variant="outlined"
+              sx={{ marginTop: 2, alignSelf: 'center' }}
+            >
+              Adicionar Ingrediente
+            </Button>
 
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
               <Button
@@ -126,14 +154,13 @@ export const ModalEdit = ({
                 variant="contained"
                 sx={{
                   flex: 1,
-                  backgroundColor: 'var(--roxo)',
+                  backgroundColor: 'var(--darkblue2)',
                   color: 'var(--primary)',
                   borderRadius: '0.4rem',
                   padding: '0.5rem',
                   fontWeight: 'bold',
                   transition: 'background-color 0.3s, transform 0.3s',
                   '&:hover': {
-                    background: 'var(--new)',
                     transform: 'scale(1.02)',
                   },
                   '&:active': {
@@ -150,14 +177,13 @@ export const ModalEdit = ({
                 variant="contained"
                 sx={{
                   flex: 1,
-                  backgroundColor: 'var(--roxo)',
+                  backgroundColor: 'var(--darkblue2)',
                   color: 'var(--primary)',
                   borderRadius: '0.4rem',
                   padding: '0.5rem',
                   fontWeight: 'bold',
                   transition: 'background-color 0.3s, transform 0.3s',
                   '&:hover': {
-                    backgroundColor: 'var(--new)',
                     transform: 'scale(1.02)',
                   },
                   '&:active': {

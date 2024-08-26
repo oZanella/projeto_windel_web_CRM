@@ -133,7 +133,7 @@ export const ModalEdit = ({
                   fontWeight: 'bold',
                   transition: 'background-color 0.3s, transform 0.3s',
                   '&:hover': {
-                    background: 'var(--new)',
+                    backgroundColor: 'var(--new)',
                     transform: 'scale(1.02)',
                   },
                   '&:active': {

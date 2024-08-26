@@ -126,14 +126,14 @@ export const ModalEdit = ({
                 variant="contained"
                 sx={{
                   flex: 1,
-                  backgroundColor: 'var(--roxo)',
+                  backgroundColor: 'var(--darkblue2)',
                   color: 'var(--primary)',
                   borderRadius: '0.4rem',
                   padding: '0.5rem',
                   fontWeight: 'bold',
                   transition: 'background-color 0.3s, transform 0.3s',
                   '&:hover': {
-                    background: 'var(--new)',
+                    back
                     transform: 'scale(1.02)',
                   },
                   '&:active': {

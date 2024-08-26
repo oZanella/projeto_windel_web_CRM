@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Box, TextField, Typography, Button, DialogContent, Snackbar, Alert } from '@mui/material';
+import { Box, TextField, Typography, Button, DialogContent, Snackbar, Alert, IconButton } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { API_BASE_URL } from './TableHome';
 
 export const ModalEdit = ({
   currentPost,
   dataEdit,
   setDataEdit,
-  onClose, 
+  onClose,
 }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -27,20 +29,20 @@ export const ModalEdit = ({
         }
       );
       console.log('Atualização bem-sucedida:', response.data);
-      setSnackbarMessage('Atualizado com sucesso'); 
-      setSnackbarSeverity('success'); 
-      setSnackbarOpen(true); 
+      setSnackbarMessage('Atualizado com sucesso');
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
       setTimeout(() => {
         if (typeof onClose === 'function') {
-          onClose(); 
+          onClose();
         }
-        window.location.reload(); 
-      }, 3000); 
+        window.location.reload();
+      }, 3000);
     } catch (error) {
       console.error('Erro ao atualizar:', error.response ? error.response.data : error.message);
       setSnackbarMessage('Erro ao atualizar');
-      setSnackbarSeverity('error'); 
-      setSnackbarOpen(true); 
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
     }
   };
 
@@ -48,16 +50,24 @@ export const ModalEdit = ({
     setSnackbarOpen(false);
   };
 
-  const handleQuantityChange = (index, value) => {
-    if (value <= 0) {
-      setSnackbarMessage('A quantidade deve ser maior que zero. Verifique!'); 
-      setSnackbarSeverity('error'); 
-      setSnackbarOpen(true); 
-      return;
-    }
-
+  const handleIngredientChange = (index, field, value) => {
     const updatedIngredients = [...dataEdit.ingredients];
-    updatedIngredients[index] = { ...updatedIngredients[index], quantity: value };
+    updatedIngredients[index] = { ...updatedIngredients[index], [field]: value };
+    setDataEdit({ ...dataEdit, ingredients: updatedIngredients });
+  };
+
+  const handleAddIngredient = () => {
+    setDataEdit({
+      ...dataEdit,
+      ingredients: [
+        ...dataEdit.ingredients,
+        { name: '', quantity: 0 }
+      ]
+    });
+  };
+
+  const handleRemoveIngredient = (index) => {
+    const updatedIngredients = dataEdit.ingredients.filter((_, i) => i !== index);
     setDataEdit({ ...dataEdit, ingredients: updatedIngredients });
   };
 
@@ -96,11 +106,7 @@ export const ModalEdit = ({
                   <TextField
                     label="Ingrediente"
                     value={ingredient.name}
-                    onChange={(e) => {
-                      const updatedIngredients = [...dataEdit.ingredients];
-                      updatedIngredients[index] = { ...updatedIngredients[index], name: e.target.value };
-                      setDataEdit({ ...dataEdit, ingredients: updatedIngredients });
-                    }}
+                    onChange={(e) => handleIngredientChange(index, 'name', e.target.value)}
                     fullWidth
                     sx={{ marginBottom: 1 }}
                   />
@@ -108,32 +114,58 @@ export const ModalEdit = ({
                     label="Quantidade"
                     type="number"
                     value={ingredient.quantity}
-                    onChange={(e) => handleQuantityChange(index, parseInt(e.target.value, 10) || 0)}
-                    InputProps={{ inputProps: { min: 1 } }} // Define o valor mínimo como 1
-                    fullWidth
+                    onChange={(e) => handleIngredientChange(index, 'quantity', parseInt(e.target.value, 10) || 0)}
+                    InputProps={{ inputProps: { min: 0 } }}
                     sx={{ marginBottom: 1 }}
+                    fullWidth
                   />
+                  <IconButton sx={{ mb: 1 }} onClick={() => handleRemoveIngredient(index)}>
+                    <DeleteIcon />
+                  </IconButton>
                 </Box>
               ))
             ) : (
-              <Typography variant="body2">Nenhum ingrediente adicionado</Typography>
+              <Typography variant="body2">Sem ingredientes</Typography>
             )}
 
-            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, marginTop: 1 }}>
+              <Button
+                sx={{
+                  background: 'var(--roxo)',
+                  fontWeight: 'bold',
+                  textTransform: 'uppercase',
+                  transition: 'background-color 0.3s, transform 0.3s',
+                  '&:hover': {
+                    backgroundColor: 'var(--new)',
+                    transform: 'scale(1.07)',
+                  },
+                  '&:active': {
+                    backgroundColor: 'var(--click)',
+                  },
+                }}
+                variant="contained"
+                color="primary"
+                onClick={handleAddIngredient}
+                startIcon={<AddCircleIcon />}
+              >
+                Adicionar
+              </Button>
+            </Box>
+
+            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, marginTop: 2 }}>
               <Button
                 onClick={onClose}
                 startIcon={<CancelIcon />}
                 variant="contained"
                 sx={{
                   flex: 1,
-                  backgroundColor: 'var(--roxo)',
+                  backgroundColor: 'var(--darkblue2)',
                   color: 'var(--primary)',
                   borderRadius: '0.4rem',
                   padding: '0.5rem',
                   fontWeight: 'bold',
                   transition: 'background-color 0.3s, transform 0.3s',
                   '&:hover': {
-                    background: 'var(--new)',
                     transform: 'scale(1.02)',
                   },
                   '&:active': {
@@ -150,14 +182,13 @@ export const ModalEdit = ({
                 variant="contained"
                 sx={{
                   flex: 1,
-                  backgroundColor: 'var(--roxo)',
+                  backgroundColor: 'var(--darkblue2)',
                   color: 'var(--primary)',
                   borderRadius: '0.4rem',
                   padding: '0.5rem',
                   fontWeight: 'bold',
                   transition: 'background-color 0.3s, transform 0.3s',
                   '&:hover': {
-                    backgroundColor: 'var(--new)',
                     transform: 'scale(1.02)',
                   },
                   '&:active': {
@@ -171,7 +202,7 @@ export const ModalEdit = ({
           </Box>
         </Box>
       )}
-      
+
       {/* Snackbar para exibir a mensagem de sucesso ou erro */}
       <Snackbar
         open={snackbarOpen}

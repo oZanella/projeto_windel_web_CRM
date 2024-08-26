@@ -126,7 +126,7 @@ export const ModalEdit = ({
                 variant="contained"
                 sx={{
                   flex: 1,
-                  backgroundColor: 'var(--roxo)',
+                  backgroundColor: 'var(--new)',
                   color: 'var(--primary)',
                   borderRadius: '0.4rem',
                   padding: '0.5rem',

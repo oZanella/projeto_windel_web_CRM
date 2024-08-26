@@ -35,8 +35,13 @@ export const ButtonRight = ({ handleSelectAll, selectedPosts, filteredPosts, han
         onClick={handleOpenModal}
         disabled={selectedPosts.length === 0}
         sx={{
-          marginRight: 2,
-          background: 'var(--new)',
+          flex: 1,
+          backgroundColor: 'var(--roxo)',
+          color: 'var(--primary)',
+          borderRadius: '0.4rem',
+          padding: '0.5rem',
+          fontWeight: 'bold',
+          transition: 'background-color 0.3s, transform 0.3s',
           '&:hover': {
             backgroundColor: 'var(--new)',
             transform: 'scale(1.02)',
@@ -53,16 +58,22 @@ export const ButtonRight = ({ handleSelectAll, selectedPosts, filteredPosts, han
         variant="contained"
         startIcon={<SelectAllIcon />}
         onClick={handleSelectAll}
-        sx={{
-          background: 'var(--roxo)',
-          '&:hover': {
-            backgroundColor: 'var(--new)',
-            transform: 'scale(1.02)',
-          },
-          '&:active': {
-            backgroundColor: 'var(--click)',
-          },
-        }}
+          sx={{
+            flex: 1,
+            backgroundColor: 'var(--roxo)',
+            color: 'var(--primary)',
+            borderRadius: '0.4rem',
+            padding: '0.5rem',
+            fontWeight: 'bold',
+            transition: 'background-color 0.3s, transform 0.3s',
+            '&:hover': {
+              backgroundColor: 'var(--new)',
+              transform: 'scale(1.02)',
+            },
+            '&:active': {
+              backgroundColor: 'var(--click)',
+            },
+          }}
       >
         {selectedPosts.length === filteredPosts.length ? 'Desmarcar Todos' : 'Selecionar Todos'}
       </Button>

@@ -38,7 +38,7 @@ export const ButtonRight = ({ handleSelectAll, selectedPosts, filteredPosts, han
           marginRight: 2,
           background: 'var(--new)',
           '&:hover': {
-            backgroundColor: 'var(--new)',
+            backgroundColor: 'var(--roxo)',
             transform: 'scale(1.02)',
           },
           '&:active': {

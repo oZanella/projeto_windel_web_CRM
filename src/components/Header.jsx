@@ -1,12 +1,18 @@
-import { AppBar, Toolbar, Box, Button } from '@mui/material';
-// import Logo from '../image/LogoWindel.svg';
+import React, { useState } from 'react';
+import { AppBar, Toolbar, Box, Button, IconButton } from '@mui/material';
 import { Link } from 'react-router-dom';
-import React from 'react';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import Logo from '../image/LogoWindel.svg';
 
 export const Header = () => {
-  return (
+  const [darkMode, setDarkMode] = useState(false);
 
-    // Header fundo 1 //
+  const handleThemeToggle = () => {
+    setDarkMode(!darkMode);
+  };
+
+  return (
     <AppBar
       position="fixed"
       sx={{
@@ -14,10 +20,9 @@ export const Header = () => {
         boxShadow: '0px 0.01px 11px var(--secondary)',
         top: 0,
         left: 0,
+        backgroundColor: darkMode ? 'var(--darkblue)' : 'var(--lightgray)',
       }}
     >
-
-      {/* Header fundo 2 */}
       <Toolbar
         sx={{
           display: 'flex',
@@ -26,35 +31,49 @@ export const Header = () => {
           justifyContent: 'space-between',
           height: '64px',
           minHeight: '64px',
-          backgroundColor: 'var(--darkblue)',
+          backgroundColor: 'inherit',
           boxSizing: 'border-box',
         }}
-      > 
-
-        {/* Botões */}
+      >
+        {/* Logo */}
         <Box
           sx={{
-            mr: { xs: 0, sm: 2 },
-            gap: 2,
             display: 'flex',
             alignItems: 'center',
-            flexGrow: { xs: 1, sm: 1},
-            justifyContent: { xs: 'center' },
+            gap: 2,
+            ml: 2,
+          }}
+        >
+          <img
+            src={Logo}
+            alt="Logo"
+            style={{ height: '40px' }}
+          />
+        </Box>
+
+        {/* Botões Centralizados */}
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 2,
+            alignItems: 'center',
+            flexGrow: 1,
+            justifyContent: 'center',
             '& .MuiButton-root': {
-              backgroundColor: 'var(--darkblue2)',
-              color: 'var(--primary)',                      
-              borderRadius: '8px',
-              padding: '8px 16px',
+              backgroundColor: darkMode ? 'var(--darkblue2)' : 'var(--roxo)',
+              color: darkMode ? 'var(--primary)' : 'var(--white)',
+              borderRadius: '0.5rem',
+              padding: '0.5rem 1rem',
               fontWeight: 'bold',
               textTransform: 'uppercase',
               transition: 'background-color 0.3s, transform 0.3s',
-
-              // Animação
               '&:hover': {
+                backgroundColor: darkMode ? 'var(--darkblue-hover)' : 'var(--new)',
+
                 transform: 'scale(1.07)',
               },
               '&:active': {
-                backgroundColor: 'var(--click)',
+                backgroundColor: darkMode ? 'var(--new)' : 'var(--lightclick)',
               },
             },
           }}
@@ -62,6 +81,25 @@ export const Header = () => {
           <Button variant="contained" component={Link} to={`/home`}>Home</Button>
           <Button variant="contained" component={Link} to={`/cadastro`}>Cadastro</Button>
           <Button variant="contained" component={Link} to={`/configuracoes`}>Guia de uso</Button>
+        </Box>
+
+
+        {/* Ícone de Alternância de Tema */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            mr: 2,
+          }}
+        >
+          <IconButton
+            edge="end"
+            color="inherit"
+            onClick={handleThemeToggle}
+          >
+            {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
         </Box>
       </Toolbar>
     </AppBar>

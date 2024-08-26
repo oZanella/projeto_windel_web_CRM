@@ -111,7 +111,7 @@ export const CardDados = ({
         </Button>
         <Button
           variant="contained"
-          color="primary"
+          color="var(--)"
           startIcon={<SelectAllIcon />}
           onClick={handleSelectAll}
         >

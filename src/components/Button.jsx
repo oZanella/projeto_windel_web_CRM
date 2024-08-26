@@ -21,8 +21,6 @@ export const ButtonRight = ({ handleSelectAll, selectedPosts, filteredPosts }) =
     handleCloseModal();
   };
 
-
-  //verificar para apagar todos selecionados
   const handleDeleteSelected = (postsToDelete) => {
     fetch('https://teste-tecnico-front-api.up.railway.app/recipe/delete-in-batch', {
       method: 'DELETE',
@@ -56,7 +54,7 @@ export const ButtonRight = ({ handleSelectAll, selectedPosts, filteredPosts }) =
         variant="contained"
         color="error"
         startIcon={<DeleteIcon />}
-        onClick={handleOpenModal} // Abre o modal
+        onClick={handleOpenModal} 
         disabled={selectedPosts.length === 0}
         sx={{ marginRight: 2 }}
       >
@@ -65,9 +63,11 @@ export const ButtonRight = ({ handleSelectAll, selectedPosts, filteredPosts }) =
 
       <Button
         variant="contained"
-        color="primary"
         startIcon={<SelectAllIcon />}
         onClick={handleSelectAll}
+        sx={{
+        background: 'var(--roxo)'
+        }}
       >
         {selectedPosts.length === filteredPosts.length ? 'Desmarcar Todos' : 'Selecionar Todos'}
       </Button>

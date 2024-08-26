@@ -27,20 +27,20 @@ export const ModalEdit = ({
         }
       );
       console.log('Atualização bem-sucedida:', response.data);
-      setSnackbarMessage('Atualizado com sucesso'); // Mensagem de sucesso
-      setSnackbarSeverity('success'); // Tipo de alerta
-      setSnackbarOpen(true); // Exibe o snackbar
+      setSnackbarMessage('Atualizado com sucesso'); 
+      setSnackbarSeverity('success'); 
+      setSnackbarOpen(true); 
       setTimeout(() => {
         if (typeof onClose === 'function') {
           onClose(); 
         }
-        window.location.reload(); // Recarrega a página após a notificação
-      }, 2000); // Tempo para exibir a notificação
+        window.location.reload(); 
+      }, 3000); 
     } catch (error) {
       console.error('Erro ao atualizar:', error.response ? error.response.data : error.message);
-      setSnackbarMessage('Erro ao atualizar'); // Mensagem de erro
-      setSnackbarSeverity('error'); // Tipo de alerta
-      setSnackbarOpen(true); // Exibe o snackbar
+      setSnackbarMessage('Erro ao atualizar');
+      setSnackbarSeverity('error'); 
+      setSnackbarOpen(true); 
     }
   };
 
@@ -50,10 +50,10 @@ export const ModalEdit = ({
 
   const handleQuantityChange = (index, value) => {
     if (value <= 0) {
-      setSnackbarMessage('A quantidade deve ser maior que 0'); // Mensagem de erro
-      setSnackbarSeverity('warning'); // Tipo de alerta
-      setSnackbarOpen(true); // Exibe o snackbar
-      return; // Não atualiza o ingrediente se a quantidade for <= 0
+      setSnackbarMessage('A quantidade deve ser maior que zero. Verifique!'); 
+      setSnackbarSeverity('error'); 
+      setSnackbarOpen(true); 
+      return;
     }
 
     const updatedIngredients = [...dataEdit.ingredients];

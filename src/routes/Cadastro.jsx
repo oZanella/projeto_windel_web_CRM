@@ -158,12 +158,13 @@ export const Cadastro = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, marginTop: 1 }}>
           <Button
             sx={{
-              background: 'var(--darkblue2)',
+              background: 'var(--roxo)',
               fontWeight: 'bold',
               textTransform: 'uppercase',
               transition: 'background-color 0.3s, transform 0.3s',
               // Animação
               '&:hover': {
+                backgroundColor: 'var(--new)',
                 transform: 'scale(1.07)',
               },
               '&:active': {
@@ -182,12 +183,13 @@ export const Cadastro = () => {
 
           <Button
             sx={{
-              background: 'var(--darkblue2)',
+              background: 'var(--roxo)',
               fontWeight: 'bold',
               textTransform: 'uppercase',
               transition: 'background-color 0.3s, transform 0.3s',
               // Animação
               '&:hover': {
+                backgroundColor: 'var(--new)',
                 transform: 'scale(1.07)',
               },
               '&:active': {

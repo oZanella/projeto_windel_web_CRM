@@ -10,7 +10,7 @@ export const Header = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState('info');
 
   const handleNotificationClick = () => {
-    setSnackbarMessage('Você não tem notificações!');
+!');
     setSnackbarSeverity('info');
     setSnackbarOpen(true);
   };

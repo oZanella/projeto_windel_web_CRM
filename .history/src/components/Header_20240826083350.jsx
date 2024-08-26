@@ -10,7 +10,7 @@ export const Header = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState('info');
 
   const handleNotificationClick = () => {
-    setSnackbarMessage('Você não tem notificações!');
+    setSnackbarMessage('Você tem uma nova notificação!');
     setSnackbarSeverity('info');
     setSnackbarOpen(true);
   };
@@ -24,7 +24,7 @@ export const Header = () => {
           boxShadow: '0px 0.01px 11px var(--secondary)',
           top: 0,
           left: 0,
-          backgroundColor: 'var(--lightgray)',
+          backgroundColor: 'var(--lightgray)', // Removido darkMode
         }}
       >
         <Toolbar
@@ -64,8 +64,8 @@ export const Header = () => {
               flexGrow: 1,
               justifyContent: 'center',
               '& .MuiButton-root': {
-                backgroundColor: 'var(--roxo)', 
-                color: 'var(--white)', 
+                backgroundColor: 'var(--roxo)', // Alterar cor de acordo com seu tema
+                color: 'var(--white)', // Alterar cor de acordo com seu tema
                 borderRadius: '0.5rem',
                 padding: '0.5rem 1rem',
                 fontWeight: 'bold',

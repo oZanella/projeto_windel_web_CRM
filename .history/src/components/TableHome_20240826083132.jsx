@@ -180,3 +180,4 @@ export const CardDados = ({ posts, setPosts, handleDelete }) => {
     </Box>
   );
 };
+nm

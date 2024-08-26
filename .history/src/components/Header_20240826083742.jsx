@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Box, Button, IconButton, Snackbar, Alert } from '@mui/material';
+import { AppBar, Toolbar, Box, Button, IconButton, Snackbar, Alert, Tooltip } from '@mui/material';
 import { Link } from 'react-router-dom';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Logo from '../image/LogoWindel.svg';
@@ -10,7 +10,7 @@ export const Header = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState('info');
 
   const handleNotificationClick = () => {
-    setSnackbarMessage('Você não tem notificações!');
+    setSnackbarMessage('Você tem uma nova notificação!');
     setSnackbarSeverity('info');
     setSnackbarOpen(true);
   };
@@ -24,7 +24,7 @@ export const Header = () => {
           boxShadow: '0px 0.01px 11px var(--secondary)',
           top: 0,
           left: 0,
-          backgroundColor: 'var(--lightgray)',
+          backgroundColor: 'var(--lightgray)', // Alterado para a cor desejada
         }}
       >
         <Toolbar
@@ -64,8 +64,8 @@ export const Header = () => {
               flexGrow: 1,
               justifyContent: 'center',
               '& .MuiButton-root': {
-                backgroundColor: 'var(--roxo)', 
-                color: 'var(--white)', 
+                backgroundColor: 'var(--roxo)', // Alterar cor de acordo com seu tema
+                color: 'var(--white)', // Alterar cor de acordo com seu tema
                 borderRadius: '0.5rem',
                 padding: '0.5rem 1rem',
                 fontWeight: 'bold',
@@ -86,7 +86,7 @@ export const Header = () => {
             <Button variant="contained" component={Link} to={`/configuracoes`}>Guia de uso</Button>
           </Box>
 
-          {/* Ícone de Notificação */}
+          {/* Ícone de Notificação com Tooltip */}
           <Box
             sx={{
               display: 'flex',
@@ -95,13 +95,15 @@ export const Header = () => {
               mr: 2,
             }}
           >
-            <IconButton
-              edge="end"
-              color="inherit"
-              onClick={handleNotificationClick}
-            >
-              <NotificationsIcon />
-            </IconButton>
+            <Tooltip title="Clique para ver notificações" arrow>
+              <IconButton
+                edge="end"
+                color="inherit"
+                onClick={handleNotificationClick}
+              >
+                <NotificationsIcon />
+              </IconButton>
+            </Tooltip>
           </Box>
         </Toolbar>
       </AppBar>

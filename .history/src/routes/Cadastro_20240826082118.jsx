@@ -41,14 +41,6 @@ export const Cadastro = () => {
   };
 
   const handleAdd = async () => {
-    // Verificar se os campos obrigatórios estão preenchidos
-    if (!newPost.name.trim() || !newPost.category.trim()) {
-      setSnackbarMessage('Nome e Categoria são obrigatórios.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
-      return;
-    }
-
     try {
       const newPostFormatted = {
         name: newPost.name,
@@ -84,8 +76,12 @@ export const Cadastro = () => {
   };
 
   return (
+
+    // Adicionar os dados do produto
     <Box sx={{ p: 3, maxWidth: 800, mx: 'auto', bgcolor: 'background.paper', boxShadow: 3, borderRadius: 2 }}>
-      <Typography variant="h6" sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>Adicionar nova receita</Typography>
+
+      <Typography variant="h6" sx={{ mb: 2, display: 'flex', justifyContent: 'center', }}>Adicionar nova receita</Typography>
+
       <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <TextField
           name="name"
@@ -108,7 +104,7 @@ export const Cadastro = () => {
           label="Categoria"
           value={newPost.category}
           onChange={handleInputChange}
-          required
+          
           fullWidth
           sx={{ marginBottom: 2 }}
         />
@@ -128,6 +124,7 @@ export const Cadastro = () => {
         {newPost.ingredients.length > 0 ? (
           newPost.ingredients.map((ingredient, index) => (
             <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+
               <TextField
                 label="Ingrediente"
                 value={ingredient.name}
@@ -135,6 +132,7 @@ export const Cadastro = () => {
                 fullWidth
                 sx={{ marginBottom: 1 }}
               />
+
               <TextField
                 label="Quantidade"
                 type="number"
@@ -144,15 +142,20 @@ export const Cadastro = () => {
                 sx={{ marginBottom: 1 }}
                 fullWidth
               />
+
+              {/* Remove o ingrediente inserido */}
               <IconButton sx={{ mb: 1 }} onClick={() => handleRemoveIngredient(index)}>
                 <DeleteIcon />
               </IconButton>
             </Box>
           ))
         ) : (
+
+          // aviso de nenhum ingrediente
           <Typography variant="body2">Sem ingredientes</Typography>
         )}
 
+        {/* Botão para adicionar Ingrediente e Salvar */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, marginTop: 1 }}>
           <Button
             sx={{
@@ -160,6 +163,7 @@ export const Cadastro = () => {
               fontWeight: 'bold',
               textTransform: 'uppercase',
               transition: 'background-color 0.3s, transform 0.3s',
+              // Animação
               '&:hover': {
                 backgroundColor: 'var(--new)',
                 transform: 'scale(1.07)',
@@ -184,6 +188,7 @@ export const Cadastro = () => {
               fontWeight: 'bold',
               textTransform: 'uppercase',
               transition: 'background-color 0.3s, transform 0.3s',
+              // Animação
               '&:hover': {
                 backgroundColor: 'var(--new)',
                 transform: 'scale(1.07)',
@@ -201,6 +206,7 @@ export const Cadastro = () => {
           </Button>
         </Box>
 
+        {/* //configuração do aviso */}
         <Snackbar
           open={snackbarOpen}
           autoHideDuration={2500}

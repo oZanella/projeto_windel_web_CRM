@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Box, Button, IconButton, Snackbar, Alert } from '@mui/material';
+import { AppBar, Toolbar, Box, Button, IconButton, Popover, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Logo from '../image/LogoWindel.svg';
 
 export const Header = () => {
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('info');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [notificationMessage, setNotificationMessage] = useState('Clique para ver as notificações');
 
-  const handleNotificationClick = () => {
-    setSnackbarMessage('Você não tem notificações!');
-    setSnackbarSeverity('info');
-    setSnackbarOpen(true);
+  const handleNotificationMouseEnter = (event) => {
+    setAnchorEl(event.currentTarget);
   };
+
+  const handleNotificationMouseLeave = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   return (
     <>
@@ -24,7 +28,7 @@ export const Header = () => {
           boxShadow: '0px 0.01px 11px var(--secondary)',
           top: 0,
           left: 0,
-          backgroundColor: 'var(--lightgray)',
+          backgroundColor: 'var(--lightgray)', // Alterado para a cor desejada
         }}
       >
         <Toolbar
@@ -64,8 +68,8 @@ export const Header = () => {
               flexGrow: 1,
               justifyContent: 'center',
               '& .MuiButton-root': {
-                backgroundColor: 'var(--roxo)', 
-                color: 'var(--white)', 
+                backgroundColor: 'var(--roxo)', // Alterar cor de acordo com seu tema
+                color: 'var(--white)', // Alterar cor de acordo com seu tema
                 borderRadius: '0.5rem',
                 padding: '0.5rem 1rem',
                 fontWeight: 'bold',
@@ -86,7 +90,7 @@ export const Header = () => {
             <Button variant="contained" component={Link} to={`/configuracoes`}>Guia de uso</Button>
           </Box>
 
-          {/* Ícone de Notificação */}
+          {/* Ícone de Notificação com Popover */}
           <Box
             sx={{
               display: 'flex',
@@ -98,7 +102,8 @@ export const Header = () => {
             <IconButton
               edge="end"
               color="inherit"
-              onClick={handleNotificationClick}
+              onMouseEnter={handleNotificationMouseEnter}
+              onMouseLeave={handleNotificationMouseLeave}
             >
               <NotificationsIcon />
             </IconButton>
@@ -106,18 +111,24 @@ export const Header = () => {
         </Toolbar>
       </AppBar>
 
-      {/* Configuração do aviso */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={2500}
-        transitionDuration={350}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      {/* Configuração do Popover */}
+      <Popover
+        id={id}
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        onClose={handleNotificationMouseLeave}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        sx={{ p: 2, mt: 1 }} // Ajuste a margem superior (mt) para posicionar corretamente
       >
-        <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%' }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+        <Typography>{notificationMessage}</Typography>
+      </Popover>
     </>
   );
 };

@@ -1,10 +1,24 @@
 import React, { useState } from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Checkbox, IconButton, Chip, Pagination } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Checkbox, IconButton, Chip, Pagination, Button, Zoom } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import CakeOutlinedIcon from '@mui/icons-material/CakeOutlined';
 import { ModalConfirmDelete } from './ModalConfirmDelete';
+import { keyframes } from '@mui/system';
+
+// Animação de pulso
+const pulse = keyframes`
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
+`;
 
 export const TablePag = ({
   paginatedPosts,
@@ -33,10 +47,8 @@ export const TablePag = ({
   const handleConfirmDelete = () => {
     if (postIdToDelete !== null) {
       handleDelete(postIdToDelete);
-      console.log(postIdToDelete)
     }
     handleCloseModal();
-    console.log(postIdToDelete)
   };
 
   return (
@@ -46,14 +58,20 @@ export const TablePag = ({
           {paginatedPosts.length === 0 ? (
             <TableBody>
               <TableRow>
+
                 <TableCell colSpan={5} align="center">
                   <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2 }}>
-                    <CakeOutlinedIcon sx={{ fontSize: 90 }} />
-                    <Typography variant="body1" sx={{ mt: 1, fontWeight: 'bold', textTransform: 'uppercase' }}>
+                    <Zoom in={true} timeout={1000}>
+                      <Box sx={{ animation: `${pulse} 2s infinite` }}>
+                        <CakeOutlinedIcon sx={{ fontSize: 90, color: 'grey' }} />
+                      </Box>
+                    </Zoom>
+                    <Typography variant="body1" sx={{ mt: 2, fontWeight: 'bold', textTransform: 'uppercase' }}>
                       Nenhuma receita localizada...
                     </Typography>
                   </Box>
                 </TableCell>
+
               </TableRow>
             </TableBody>
           ) : (
@@ -128,9 +146,7 @@ export const TablePag = ({
 
                         {post.isFavorite && (
                           <Chip
-                            icon={
-                              <StarOutlineIcon />
-                            }
+                            icon={<StarOutlineIcon />}
                             sx={{
                               cursor: 'default',
                               ml: 2,

@@ -31,8 +31,11 @@ export const ModalConfirmDelete = ({ open, onClose, onConfirm }) => {
           <Typography variant="h6" component="h2" sx={{ display: 'flex', justifyContent: 'center' }}>
             Confirmar Exclusão
           </Typography>
-          <Typography sx={{ mt: 2 }}>
-            Tem certeza que deseja excluir este item?
+          <Typography sx={{
+            mt: 2,
+            textAlign: 'center',
+          }}>
+            Tem certeza que deseja excluir essa receita permanentemente?
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
             <Button
@@ -43,13 +46,14 @@ export const ModalConfirmDelete = ({ open, onClose, onConfirm }) => {
                 ml: { xs: 1, sm: 1 },
                 gap: 2,
                 flexGrow: { xs: 1, sm: 1 },
-                backgroundColor: 'var(--darkblue2)',
+                backgroundColor: 'var(--roxo)',
                 color: 'var(--primary)',
                 borderRadius: '0.4rem',
                 padding: '0.5rem',
                 fontWeight: 'bold',
                 transition: 'background-color 0.3s, transform 0.3s',
                 '&:hover': {
+                  backgroundColor: 'var(--new)',
                   transform: 'scale(1.02)',
                 },
                 '&:active': {

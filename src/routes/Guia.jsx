@@ -2,7 +2,7 @@ import { Box, Typography, List, ListItem, ListItemText } from '@mui/material'
 import NotListedLocationIcon from '@mui/icons-material/NotListedLocation';
 import React from 'react'
 
-export const Configuracoes = () => {
+export const Guia = () => {
   return (
     <Box
       sx={{

@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Box, TextField, Typography, Button, DialogContent, Snackbar, Alert } from '@mui/material';
+import {
+  Box,
+  TextField,
+  Typography,
+  Button,
+  DialogContent,
+  Snackbar,
+  Alert,
+  FormControlLabel,
+  Switch,
+} from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { API_BASE_URL } from './TableHome';
@@ -9,7 +19,7 @@ export const ModalEdit = ({
   currentPost,
   dataEdit,
   setDataEdit,
-  onClose, 
+  onClose,
 }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -27,20 +37,20 @@ export const ModalEdit = ({
         }
       );
       console.log('Atualização bem-sucedida:', response.data);
-      setSnackbarMessage('Atualizado com sucesso'); 
-      setSnackbarSeverity('success'); 
-      setSnackbarOpen(true); 
+      setSnackbarMessage('Atualizado com sucesso');
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
       setTimeout(() => {
         if (typeof onClose === 'function') {
-          onClose(); 
+          onClose();
         }
-        window.location.reload(); 
-      }, 3000); 
+        window.location.reload();
+      }, 3000);
     } catch (error) {
       console.error('Erro ao atualizar:', error.response ? error.response.data : error.message);
       setSnackbarMessage('Erro ao atualizar');
-      setSnackbarSeverity('error'); 
-      setSnackbarOpen(true); 
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
     }
   };
 
@@ -50,9 +60,9 @@ export const ModalEdit = ({
 
   const handleQuantityChange = (index, value) => {
     if (value <= 0) {
-      setSnackbarMessage('A quantidade deve ser maior que zero. Verifique!'); 
-      setSnackbarSeverity('error'); 
-      setSnackbarOpen(true); 
+      setSnackbarMessage('A quantidade deve ser maior que zero. Verifique!');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
       return;
     }
 
@@ -89,7 +99,24 @@ export const ModalEdit = ({
               sx={{ marginBottom: 2 }}
             />
 
-            <Typography variant="subtitle1" sx={{ mb: 1 }}>Ingredientes</Typography>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={dataEdit.isFavorite || false}
+                  onChange={(e) => setDataEdit({ ...dataEdit, isFavorite: e.target.checked })}
+                  sx={{
+                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                      backgroundColor: 'var(--new)',
+                    },
+                  }}
+                />
+              }
+              label="Favorito"
+              sx={{ marginBottom: 2 }}
+            />
+
+
+            <Typography variant="subtitle1" sx={{ mb: 1 }}>Ingredientes: </Typography>
             {dataEdit.ingredients && dataEdit.ingredients.length > 0 ? (
               dataEdit.ingredients.map((ingredient, index) => (
                 <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -109,7 +136,7 @@ export const ModalEdit = ({
                     type="number"
                     value={ingredient.quantity}
                     onChange={(e) => handleQuantityChange(index, parseInt(e.target.value, 10) || 0)}
-                    InputProps={{ inputProps: { min: 1 } }} // Define o valor mínimo como 1
+                    InputProps={{ inputProps: { min: 1 } }}
                     fullWidth
                     sx={{ marginBottom: 1 }}
                   />
@@ -171,8 +198,7 @@ export const ModalEdit = ({
           </Box>
         </Box>
       )}
-      
-      {/* Snackbar para exibir a mensagem de sucesso ou erro */}
+
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={2500}

@@ -1,7 +1,6 @@
 
 import { blogFetch } from '../axios/config';
 
-
 export const handleShowDetails = (post, setSelectInfo, selectInfo) => {
   if (selectInfo?.id === post.id) {
     setSelectInfo(null); 

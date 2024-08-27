@@ -8,7 +8,7 @@ import './style/GlobalStyles.css'
 //páginas do projeto
 import { Cadastro } from './routes/Cadastro.jsx'
 import { Home } from './routes/Home.jsx'
-import { Configuracoes } from './routes/configuracoes.jsx'
+import { Guia } from "./routes/Guia.jsx" 
 
 const router = createBrowserRouter([
   {
@@ -27,8 +27,8 @@ const router = createBrowserRouter([
         element: <Cadastro />,
       },
       {
-        path: '/configuracoes',
-        element: <Configuracoes />,
+        path: '/guia',
+        element: <Guia />,
       },
     ],
   },

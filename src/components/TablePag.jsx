@@ -35,9 +35,9 @@ export const TablePag = ({
       handleDelete(postIdToDelete);
       console.log(postIdToDelete)
     }
-    handleCloseModal(); 
+    handleCloseModal();
     console.log(postIdToDelete)
-   };
+  };
 
   return (
     <>
@@ -118,7 +118,7 @@ export const TablePag = ({
                         >
                           <EditIcon />
                         </IconButton>
-                        
+
                         <IconButton
                           color="error"
                           onClick={() => handleOpenModal(post.id)}
@@ -129,7 +129,7 @@ export const TablePag = ({
                         {post.isFavorite && (
                           <Chip
                             icon={
-                              <StarOutlineIcon sx={{ color: '#FFD700 !important' }} />
+                              <StarOutlineIcon />
                             }
                             sx={{
                               cursor: 'default',
@@ -148,13 +148,15 @@ export const TablePag = ({
         </Table>
       </TableContainer>
 
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-        <Pagination
-          count={Math.ceil(filteredPosts.length / itemsPerPage)}
-          page={page}
-          onChange={handleChangePage}
-        />
-      </Box>
+      {filteredPosts.length > 0 && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+          <Pagination
+            count={Math.ceil(filteredPosts.length / itemsPerPage)}
+            page={page}
+            onChange={handleChangePage}
+          />
+        </Box>
+      )}
 
       <ModalConfirmDelete
         open={isModalOpen}

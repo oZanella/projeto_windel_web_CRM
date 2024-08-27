@@ -21,8 +21,11 @@ Tratamento de erros HTTP
 Rascunhos da UI feitos no Figma
 Commits do GitHub de forma organizada (isso vai servir para facilitar melhor a análise dos códigos)
 
-
-
 API: https://teste-tecnico-front-api.up.railway.app
 Documentação da API: https://teste-tecnico-front-api.up.railway.app/swagger
 
+=======
+# Acesso ao projeto:
+
+- Executar em seu terminal npm install
+- Após baixar executar o comando npm run dev

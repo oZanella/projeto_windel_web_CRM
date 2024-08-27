@@ -15,7 +15,7 @@ export const Cadastro = () => {
     ingredients: [{ name: '', quantity: 0 }]
   });
 
-  // Dados para apresentar aviso de sucesso ou erro
+
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
@@ -41,7 +41,7 @@ export const Cadastro = () => {
   };
 
   const handleAdd = async () => {
-    // Verificar se os campos obrigatórios estão preenchidos
+
     if (!newPost.name.trim() || !newPost.category.trim()) {
       setSnackbarMessage('Nome e Categoria são obrigatórios.');
       setSnackbarSeverity('error');
@@ -60,7 +60,7 @@ export const Cadastro = () => {
 
       const response = await blogFetch.post("/recipe", newPostFormatted);
 
-      // Limpa os campos do formulário
+
       setNewPost({
         name: '',
         description: '',
@@ -69,14 +69,14 @@ export const Cadastro = () => {
         ingredients: [{ name: '', quantity: 0 }]
       });
 
-      // Mostrar mensagem de sucesso
+
       setSnackbarMessage('Registro realizado com sucesso');
       setSnackbarSeverity('success');
       setSnackbarOpen(true);
 
     } catch (error) {
 
-      // Mostrar mensagem de erro
+
       setSnackbarMessage('Não foi possível realizar o cadastro. Verifique os dados inseridos.');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
@@ -118,6 +118,11 @@ export const Cadastro = () => {
               checked={newPost.isFavorite}
               onChange={(e) => setNewPost({ ...newPost, isFavorite: e.target.checked })}
               color="primary"
+              sx={{
+                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                  backgroundColor: 'var(--new)',
+                },
+              }}
             />
           }
           label="Favorito"
